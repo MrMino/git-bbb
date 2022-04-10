@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 def git_blame(path: Path):
-    return subprocess.check_output(["git", "blame", str(path)])
+    return subprocess.check_output(["git", "blame", "--line-porcelain", str(path)])
 
 
 def __main__():
