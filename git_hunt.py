@@ -29,13 +29,13 @@ class BlameLine:
     committer_tz: str
 
 
-def git_blame(path: Path):
+def git_blame(path: Path) -> str:
     return subprocess.check_output(
         ["git", "blame", "--line-porcelain", str(path)]
-    )
+    ).decode("utf-8")
 
 
 def __main__():
     path = Path(sys.argv[1])
     blame = git_blame(path)
-    print(blame.decode("utf-8"))
+    print(blame)
