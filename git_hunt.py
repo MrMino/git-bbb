@@ -12,6 +12,3 @@ def __main__():
     path = Path(sys.argv[1])
     blame = git_blame(path)
     print(blame)
-
-
-__main__()
