@@ -13,18 +13,21 @@ class BlameLine:
     sha: str
     previous_sha: Optional[str]
     summary: str
+    is_boundary: bool
+
+    repeats: Optional[int]
 
     original_filename: str
     original_line_number: int
     final_line_number: int
 
     author_name: str
-    author_email: str
+    author_mail: str
     author_time: int
     author_tz: str
 
     committer_name: str
-    committer_email: str
+    committer_mail: str
     committer_time: int
     committer_tz: str
 
