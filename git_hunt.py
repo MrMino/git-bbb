@@ -11,4 +11,4 @@ def git_blame(path: Path):
 def __main__():
     path = Path(sys.argv[1])
     blame = git_blame(path)
-    print(blame)
+    print(blame.decode('utf-8'))
