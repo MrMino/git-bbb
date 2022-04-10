@@ -1,0 +1,23 @@
+[project]
+name = "git-hunt"
+version = "0.0.1"
+dependencies = [
+	"gitpython"
+]
+
+[project.optional-dependencies]
+test = [
+	"pytest",
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[options]
+
+[project.scripts]
+git-hunt = "git_hunt:__main__"
+
+[options.extras_require]
+test = ["pytest"]
