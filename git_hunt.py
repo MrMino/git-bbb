@@ -59,25 +59,44 @@ def git_blame(path: Path) -> str:
 
 def parse_git_blame_output(blame_output: str) -> List[BlameLine]:
     BLAME_HEADER_REGEX = re.compile(
-        r"(?P<sha>[a-z0-9]{40})"
-        r" "
-        r"(?P<original_line_number>[0-9]+)"
-        r" "
-        r"(?P<final_line_number>[0-9]+)"
-        r"( (?P<repeats>[0-9]+)\n|\n)"
-        r"author (?P<author_name>.*)\n"
-        r"author-mail (?P<author_mail>.*)\n"
-        r"author-time (?P<author_time>\d+)\n"
-        r"author-tz (?P<author_tz>\+\d{4})\n"
-        r"committer (?P<committer_name>.*)\n"
-        r"committer-mail (?P<committer_mail>.*)\n"
-        r"committer-time (?P<committer_time>\d+)\n"
-        r"committer-tz (?P<committer_tz>\+\d{4})\n"
-        r"summary (?P<summary>.*)\n"
-        r"(?P<is_boundary>boundary\n)?"
-        r"(previous (?P<previous_sha>[a-z0-9]+)\n)?"
-        r"filename (?P<original_filename>.*)\n"
-        r"\t(?P<content>.*\n)"
+        # FIXME: this fails, probably due to escaped space characters?
+        r"""
+        # This is on a single line, separated by spaces.
+        # The number of repeats is only shown for the first occurrence of a
+        # commit.
+        (?P<sha>[a-z0-9]{40})
+        \ (?P<original_line_number>[0-9]+)
+        \ (?P<final_line_number>[0-9]+)
+        ( (?P<repeats>[0-9]+)\n|\n)
+
+        author (?P<author_name>.*)\n
+        author-mail (?P<author_mail>.*)\n
+        author-time (?P<author_time>\d+)\n
+        author-tz (?P<author_tz>\+\d{4})\n
+
+        committer (?P<committer_name>.*)\n
+        committer-mail (?P<committer_mail>.*)\n
+        committer-time (?P<committer_time>\d+)\n
+        committer-tz (?P<committer_tz>\+\d{4})\n
+
+        summary (?P<summary>.*)\n
+
+        # The string "boundary" is only shown if a line comes from a boundary
+        # commit.
+        (?P<is_boundary>boundary\n)?
+
+        # SHA "previous" only shows up if a line has been modified, as opposed
+        # to just added.
+        (previous (?P<previous_sha>[a-z0-9]+)\n)?
+
+        # Filename might be different from the current one, e.g. in case
+        # someone used 'git mv'.
+        filename (?P<original_filename>.*)\n
+
+        # The actual content is prepended with tab character.
+        \t(?P<content>.*\n)
+        """,
+        re.MULTILINE | re.VERBOSE
     )
 
     blames = [
