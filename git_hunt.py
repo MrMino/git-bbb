@@ -98,4 +98,5 @@ def __main__():
     path = Path(sys.argv[1])
     blame_output = git_blame(path)
     blame_lines = parse_git_blame_output(blame_output)
-    print(blame_lines)
+    for blame in blame_lines:
+        print(blame.content, end='')
