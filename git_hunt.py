@@ -12,9 +12,11 @@ class BlameLine:
     content: str
 
     sha: str
-    previous_sha: Optional[str]
     summary: str
     is_boundary: bool
+
+    previous_sha: Optional[str]
+    previous_filename: Optional[str]
 
     repeats: Optional[int]
 
@@ -75,7 +77,11 @@ def parse_git_blame_output(blame_output: str) -> List[BlameLine]:
         r"committer-tz (?P<committer_tz>\+\d{4})\n"
         r"summary (?P<summary>.*)\n"
         r"(?P<is_boundary>boundary\n)?"
-        r"(previous (?P<previous_sha>[a-z0-9]+)\n)?"
+        r"(previous "
+        r"(?P<previous_sha>[a-z0-9]+)"
+        r" "
+        r"(?P<previous_filename>.*)"
+        r"\n)?"
         r"filename (?P<original_filename>.*)\n"
         r"\t(?P<content>.*\n)"
     )
