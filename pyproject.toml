@@ -2,7 +2,9 @@
 name = "git-hunt"
 version = "0.0.1"
 dependencies = [
-	"gitpython"
+	"gitpython",
+	"Pygments",
+	"prompt-toolkit",
 ]
 
 [project.optional-dependencies]
@@ -11,7 +13,7 @@ test = [
 ]
 
 [build-system]
-requires = ["setuptools", "wheel", "Pygments", "prompt-toolkit"]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [options]
