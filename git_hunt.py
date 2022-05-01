@@ -6,6 +6,11 @@ from pathlib import Path
 from dataclasses import dataclass
 from typing import Optional, List
 
+from pygments.lexers import guess_lexer_for_filename
+from pygments import lex as pygmentize
+from prompt_toolkit.formatted_text import PygmentsTokens
+from prompt_toolkit import print_formatted_text
+
 
 @dataclass
 class BlameLine:
@@ -98,5 +103,8 @@ def __main__():
     path = Path(sys.argv[1])
     blame_output = git_blame(path)
     blames = parse_git_blame_output(blame_output)
-    for blame in blames:
-        print(blame.content, end='')
+    output = ''.join([b.content for b in blames])
+
+    lexer = guess_lexer_for_filename(path, output)
+    tokens = pygmentize(output, lexer)
+    print_formatted_text(PygmentsTokens(tokens))
