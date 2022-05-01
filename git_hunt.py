@@ -9,7 +9,15 @@ from typing import Optional, List
 from pygments.lexers import guess_lexer_for_filename
 from pygments import lex as pygmentize
 from prompt_toolkit.formatted_text import PygmentsTokens
-from prompt_toolkit import print_formatted_text
+
+
+from prompt_toolkit import Application
+from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.layout import (
+    Layout,
+    Window,
+    FormattedTextControl,
+)
 
 
 @dataclass
@@ -103,8 +111,27 @@ def __main__():
     path = Path(sys.argv[1])
     blame_output = git_blame(path)
     blames = parse_git_blame_output(blame_output)
-    output = ''.join([b.content for b in blames])
+    output = "".join([b.content for b in blames])
+
+    kb = KeyBindings()
+
+    @kb.add("q")
+    def exit(event):
+        event.app.exit()
 
     lexer = guess_lexer_for_filename(path, output)
     tokens = pygmentize(output, lexer)
-    print_formatted_text(PygmentsTokens(tokens))
+
+    layout = Layout(
+        Window(
+            content=FormattedTextControl(text=PygmentsTokens(tokens)),
+        )
+    )
+
+    app = Application(
+        full_screen=True,
+        layout=layout,
+        key_bindings=kb,
+    )
+
+    app.run()
