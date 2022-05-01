@@ -88,7 +88,7 @@ def parse_git_blame_output(blame_output: str) -> List[BlameLine]:
 
     blames = [
         BlameLine.from_groupdict(**m.groupdict())
-        for m in BLAME_HEADER_REGEX.finditer(blame_output, re.MULTILINE)
+        for m in BLAME_HEADER_REGEX.finditer(blame_output)
     ]
 
     return blames
