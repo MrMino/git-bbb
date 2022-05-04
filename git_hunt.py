@@ -115,7 +115,7 @@ def __main__():
 
     kb = KeyBindings()
 
-    @kb.add("q")
+    @kb.add("q", eager=True)
     def exit(event):
         event.app.exit()
 
