@@ -132,6 +132,7 @@ def __main__():
         full_screen=True,
         layout=layout,
         key_bindings=kb,
+        mouse_support=True,
     )
 
     app.run()
