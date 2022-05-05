@@ -6,10 +6,7 @@ from pathlib import Path
 from dataclasses import dataclass
 from typing import Optional, List
 
-from pygments.lexers import guess_lexer_for_filename
-from pygments import lex as pygmentize
-from prompt_toolkit.formatted_text import PygmentsTokens
-
+from prompt_toolkit.lexers import PygmentsLexer
 
 from prompt_toolkit import Application
 from prompt_toolkit.key_binding import KeyBindings
@@ -21,7 +18,7 @@ from prompt_toolkit.buffer import Buffer, Document
 from prompt_toolkit.layout import (
     Layout,
     Window,
-    FormattedTextControl,
+    BufferControl,
 )
 
 
@@ -134,12 +131,15 @@ def __main__():
     def scroll_up(event):
         scroll_one_line_up(event)
 
-    lexer = guess_lexer_for_filename(path, output)
-    tokens = pygmentize(output, lexer)
+    pygments_lexer = PygmentsLexer.from_filename(path)
+
+    content_buffer = Buffer(read_only=True)
+    document = Document(output, content_buffer.cursor_position)
+    content_buffer.set_document(document, bypass_readonly=True)
 
     layout = Layout(
         Window(
-            content=FormattedTextControl(text=PygmentsTokens(tokens)),
+            content=BufferControl(content_buffer, lexer=pygments_lexer),
         )
     )
 
