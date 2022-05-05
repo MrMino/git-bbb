@@ -9,10 +9,6 @@ from prompt_toolkit.lexers import PygmentsLexer
 
 from prompt_toolkit import Application
 from prompt_toolkit.key_binding import KeyBindings
-from prompt_toolkit.key_binding.bindings.scroll import (
-    scroll_one_line_down,
-    scroll_one_line_up,
-)
 from prompt_toolkit.buffer import Buffer, Document
 from prompt_toolkit.layout import (
     Layout,
@@ -123,22 +119,23 @@ def __main__():
     @kb.add("j")
     @kb.add("down")
     def scroll_down(event):
-        scroll_one_line_down(event)
+        source_buffer_control.move_cursor_down()
 
     @kb.add("k")
     @kb.add("up")
     def scroll_up(event):
-        scroll_one_line_up(event)
+        source_buffer_control.move_cursor_up()
 
     pygments_lexer = PygmentsLexer.from_filename(path)
 
     source_buffer = Buffer(name="source", read_only=True)
     source_document = Document(output, cursor_position=0)
     source_buffer.set_document(source_document, bypass_readonly=True)
+    source_buffer_control = BufferControl(source_buffer, lexer=pygments_lexer)
 
     layout = Layout(
         Window(
-            content=BufferControl(source_buffer, lexer=pygments_lexer),
+            content=source_buffer_control,
         )
     )
 
