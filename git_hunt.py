@@ -13,6 +13,11 @@ from prompt_toolkit.formatted_text import PygmentsTokens
 
 from prompt_toolkit import Application
 from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.key_binding.bindings.scroll import (
+    scroll_one_line_down,
+    scroll_one_line_up,
+)
+from prompt_toolkit.buffer import Buffer, Document
 from prompt_toolkit.layout import (
     Layout,
     Window,
@@ -118,6 +123,16 @@ def __main__():
     @kb.add("q", eager=True)
     def exit(event):
         event.app.exit()
+
+    @kb.add("j")
+    @kb.add("down")
+    def scroll_down(event):
+        scroll_one_line_down(event)
+
+    @kb.add("k")
+    @kb.add("up")
+    def scroll_up(event):
+        scroll_one_line_up(event)
 
     lexer = guess_lexer_for_filename(path, output)
     tokens = pygmentize(output, lexer)
