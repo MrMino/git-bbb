@@ -156,6 +156,8 @@ def __main__():
                     content=source_buffer_control,
                 ),
             ],
+            padding=1,
+            padding_char="│",
         )
     )
 
