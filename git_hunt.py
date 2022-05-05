@@ -12,6 +12,7 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.buffer import Buffer, Document
 from prompt_toolkit.layout import (
     Layout,
+    VSplit,
     Window,
     BufferControl,
 )
@@ -104,11 +105,15 @@ def parse_git_blame_output(blame_output: str) -> List[BlameLine]:
     return blames
 
 
+MAX_SHA_CHARS_SHOWN = 16
+
+
 def __main__():
     path = Path(sys.argv[1])
     blame_output = git_blame(path)
     blames = parse_git_blame_output(blame_output)
     output = "".join([b.content for b in blames])
+    sha_list = "\n".join([b.sha[:MAX_SHA_CHARS_SHOWN] for b in blames])
 
     kb = KeyBindings()
 
@@ -119,11 +124,13 @@ def __main__():
     @kb.add("j")
     @kb.add("down")
     def scroll_down(event):
+        commits_buffer_control.move_cursor_down()
         source_buffer_control.move_cursor_down()
 
     @kb.add("k")
     @kb.add("up")
     def scroll_up(event):
+        commits_buffer_control.move_cursor_up()
         source_buffer_control.move_cursor_up()
 
     pygments_lexer = PygmentsLexer.from_filename(path)
@@ -133,9 +140,22 @@ def __main__():
     source_buffer.set_document(source_document, bypass_readonly=True)
     source_buffer_control = BufferControl(source_buffer, lexer=pygments_lexer)
 
+    commits_buffer = Buffer(name="commits", read_only=True)
+    commits_document = Document(sha_list, cursor_position=0)
+    commits_buffer.set_document(commits_document, bypass_readonly=True)
+    commits_buffer_control = BufferControl(commits_buffer)
+
     layout = Layout(
-        Window(
-            content=source_buffer_control,
+        VSplit(
+            [
+                Window(
+                    content=commits_buffer_control,
+                    width=MAX_SHA_CHARS_SHOWN,
+                ),
+                Window(
+                    content=source_buffer_control,
+                ),
+            ],
         )
     )
 
