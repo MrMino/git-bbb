@@ -133,7 +133,7 @@ def __main__():
     pygments_lexer = PygmentsLexer.from_filename(path)
 
     source_buffer = Buffer(name="source", read_only=True)
-    source_document = Document(output, source_buffer.cursor_position)
+    source_document = Document(output, cursor_position=0)
     source_buffer.set_document(source_document, bypass_readonly=True)
 
     layout = Layout(
