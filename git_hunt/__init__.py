@@ -17,6 +17,10 @@ from prompt_toolkit.layout import (
     BufferControl,
 )
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 @dataclass
 class BlameLine:
