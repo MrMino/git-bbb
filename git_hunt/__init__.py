@@ -94,6 +94,7 @@ def __main__():
         VSplit(
             [
                 Window(
+                    # TODO: padding between margins
                     left_margins=[
                         CommitSHAMargin([b.sha for b in blames]),
                         NumberedMargin(),
