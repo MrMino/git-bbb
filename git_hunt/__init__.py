@@ -89,6 +89,7 @@ def __main__():
                         NumberedMargin(),
                     ],
                     content=source_buffer_control,
+                    always_hide_cursor=True,
                 ),
             ],
             padding=1,
