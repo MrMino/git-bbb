@@ -8,23 +8,45 @@ from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit import Application
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.buffer import Buffer, Document
-from prompt_toolkit.formatted_text import FormattedText, to_formatted_text
-from prompt_toolkit.data_structures import Point
 from prompt_toolkit.layout import (
     Layout,
     VSplit,
     Window,
     BufferControl,
-    FormattedTextControl,
     NumberedMargin,
+    Margin,
 )
 
 from .git_plumbing import git_blame, parse_git_blame_output
+
+
+from typing import TYPE_CHECKING, List
+
+if TYPE_CHECKING:
+    from prompt_toolkit.layout import WindowRenderInfo
+    from prompt_toolkit.formatted_text import StyleAndTextTuples
 
 import logging
 
 logger = logging.getLogger(__name__)
 MAX_SHA_CHARS_SHOWN = 16
+
+
+class CommitSHAMargin(Margin):
+    def __init__(self, shas: List[str]):
+        self.shas = shas
+
+    def create_margin(
+        self, winfo: WindowRenderInfo, width: int, height: int
+    ) -> StyleAndTextTuples:
+        start = winfo.vertical_scroll
+        return [
+            ("", self.shas[n] + "\n") for n in range(start, start + height)
+        ]
+
+    def get_width(self, _) -> int:
+        # Add one for padding
+        return MAX_SHA_CHARS_SHOWN + 1
 
 
 def __main__():
@@ -33,7 +55,6 @@ def __main__():
     blames = parse_git_blame_output(blame_output)
     output = "".join([b.content for b in blames])
     output = output.rstrip("\n")  # Do not want to render empty line at the end
-    sha_list = "\n".join([b.sha[:MAX_SHA_CHARS_SHOWN] for b in blames])
 
     # FIXME: PageUp & PageDown keys scroll only one window
     kb = KeyBindings()
@@ -59,24 +80,14 @@ def __main__():
     source_buffer.set_document(source_document, bypass_readonly=True)
     source_buffer_control = BufferControl(source_buffer, lexer=pygments_lexer)
 
-    # TODO: make this into a margin?
-    commits_text = FormattedText(to_formatted_text(sha_list))
-    commits_text_control = FormattedTextControl(
-        commits_text,
-        get_cursor_position=lambda: Point(
-            0, source_buffer.document.cursor_position_row
-        ),
-    )
-
     layout = Layout(
         VSplit(
             [
                 Window(
-                    content=commits_text_control,
-                    width=MAX_SHA_CHARS_SHOWN,
-                ),
-                Window(
-                    left_margins=[NumberedMargin()],
+                    left_margins=[
+                        CommitSHAMargin([b.sha for b in blames]),
+                        NumberedMargin(),
+                    ],
                     content=source_buffer_control,
                 ),
             ],
