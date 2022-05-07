@@ -6,11 +6,14 @@ from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit import Application
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.buffer import Buffer, Document
+from prompt_toolkit.formatted_text import FormattedText, to_formatted_text
+from prompt_toolkit.data_structures import Point
 from prompt_toolkit.layout import (
     Layout,
     VSplit,
     Window,
     BufferControl,
+    FormattedTextControl,
 )
 
 from .git_plumbing import git_blame, parse_git_blame_output
@@ -39,14 +42,12 @@ def __main__():
     @kb.add("j")
     @kb.add("down")
     def scroll_down(event):
-        commits_buffer_control.move_cursor_down()
         source_buffer_control.move_cursor_down()
         line_numbers_buffer_control.move_cursor_down()
 
     @kb.add("k")
     @kb.add("up")
     def scroll_up(event):
-        commits_buffer_control.move_cursor_up()
         source_buffer_control.move_cursor_up()
         line_numbers_buffer_control.move_cursor_up()
 
@@ -58,11 +59,13 @@ def __main__():
     source_buffer.set_document(source_document, bypass_readonly=True)
     source_buffer_control = BufferControl(source_buffer, lexer=pygments_lexer)
 
-    # TODO: replace with FormattedText & FormattedTextControl
-    commits_buffer = Buffer(name="commits", read_only=True)
-    commits_document = Document(sha_list, cursor_position=0)
-    commits_buffer.set_document(commits_document, bypass_readonly=True)
-    commits_buffer_control = BufferControl(commits_buffer)
+    commits_text = FormattedText(to_formatted_text(sha_list))
+    commits_text_control = FormattedTextControl(
+        commits_text,
+        get_cursor_position=lambda: Point(
+            0, source_buffer.document.cursor_position_row
+        ),
+    )
 
     # TODO: replace with prompt_toolkit.layout.NumberedMargin
     line_numbers_buffer = Buffer(name="line_numbers", read_only=True)
@@ -78,7 +81,7 @@ def __main__():
         VSplit(
             [
                 Window(
-                    content=commits_buffer_control,
+                    content=commits_text_control,
                     width=MAX_SHA_CHARS_SHOWN,
                 ),
                 Window(
