@@ -14,6 +14,7 @@ from prompt_toolkit.layout import (
     Window,
     BufferControl,
     FormattedTextControl,
+    NumberedMargin,
 )
 
 from .git_plumbing import git_blame, parse_git_blame_output
@@ -43,13 +44,11 @@ def __main__():
     @kb.add("down")
     def scroll_down(event):
         source_buffer_control.move_cursor_down()
-        line_numbers_buffer_control.move_cursor_down()
 
     @kb.add("k")
     @kb.add("up")
     def scroll_up(event):
         source_buffer_control.move_cursor_up()
-        line_numbers_buffer_control.move_cursor_up()
 
     pygments_lexer = PygmentsLexer.from_filename(path)
 
@@ -67,16 +66,6 @@ def __main__():
         ),
     )
 
-    # TODO: replace with prompt_toolkit.layout.NumberedMargin
-    line_numbers_buffer = Buffer(name="line_numbers", read_only=True)
-    line_numbers_document = Document(
-        "\n".join([str(n) for n in range(len(blames))]), cursor_position=0
-    )
-    line_numbers_buffer.set_document(
-        line_numbers_document, bypass_readonly=True
-    )
-    line_numbers_buffer_control = BufferControl(line_numbers_buffer)
-
     layout = Layout(
         VSplit(
             [
@@ -85,11 +74,7 @@ def __main__():
                     width=MAX_SHA_CHARS_SHOWN,
                 ),
                 Window(
-                    content=line_numbers_buffer_control,
-                    dont_extend_width=True,
-                    width=3,
-                ),
-                Window(
+                    left_margins=[NumberedMargin()],
                     content=source_buffer_control,
                 ),
             ],
