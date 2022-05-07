@@ -115,6 +115,7 @@ def __main__():
     output = "".join([b.content for b in blames])
     sha_list = "\n".join([b.sha[:MAX_SHA_CHARS_SHOWN] for b in blames])
 
+    # FIXME: PageUp & PageDown keys scroll only one window
     kb = KeyBindings()
 
     @kb.add("q", eager=True)
@@ -137,11 +138,13 @@ def __main__():
 
     pygments_lexer = PygmentsLexer.from_filename(path)
 
+    # TODO: ~maybe~ replace this with FormattedTextControl?
     source_buffer = Buffer(name="source", read_only=True)
     source_document = Document(output, cursor_position=0)
     source_buffer.set_document(source_document, bypass_readonly=True)
     source_buffer_control = BufferControl(source_buffer, lexer=pygments_lexer)
 
+    # TODO: replace with FormattedText & FormattedTextControl
     commits_buffer = Buffer(name="commits", read_only=True)
     commits_document = Document(sha_list, cursor_position=0)
     commits_buffer.set_document(commits_document, bypass_readonly=True)
