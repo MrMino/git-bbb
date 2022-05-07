@@ -56,8 +56,7 @@ class CommitSHAMargin(Margin):
         rows[current_row] = ("#ffe100 bold", text)
 
     def get_width(self, _) -> int:
-        # Add one for padding
-        return MAX_SHA_CHARS_SHOWN + 1
+        return MAX_SHA_CHARS_SHOWN
 
 
 def __main__():
