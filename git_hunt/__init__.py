@@ -65,7 +65,7 @@ def __main__():
     blame_output = git_blame(path)
     blames = parse_git_blame_output(blame_output)
     output = "".join([b.content for b in blames])
-    output = output.rstrip("\n")  # Do not want to render empty line at the end
+    output = output.rstrip("\n")  # Do not render empty line at the end
 
     kb = KeyBindings()
 
