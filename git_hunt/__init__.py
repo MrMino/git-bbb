@@ -10,7 +10,6 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.buffer import Buffer, Document
 from prompt_toolkit.layout import (
     Layout,
-    VSplit,
     Window,
     BufferControl,
     NumberedMargin,
@@ -91,21 +90,15 @@ def __main__():
     source_buffer_control = BufferControl(source_buffer, lexer=pygments_lexer)
 
     layout = Layout(
-        VSplit(
-            [
-                Window(
-                    # TODO: padding between margins
-                    left_margins=[
-                        CommitSHAMargin([b.sha for b in blames]),
-                        NumberedMargin(),
-                    ],
-                    content=source_buffer_control,
-                    always_hide_cursor=True,
-                ),
+        Window(
+            # TODO: padding between margins
+            left_margins=[
+                CommitSHAMargin([b.sha for b in blames]),
+                NumberedMargin(),
             ],
-            padding=1,
-            padding_char="│",
-        )
+            content=source_buffer_control,
+            always_hide_cursor=True,
+        ),
     )
 
     app = Application(
