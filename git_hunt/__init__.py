@@ -40,6 +40,7 @@ class CommitSHAMargin(Margin):
         self, winfo: WindowRenderInfo, width: int, height: int
     ) -> StyleAndTextTuples:
         start = winfo.vertical_scroll
+        # TODO: mouse click on the margin should change cursor position
         margin_text: StyleAndTextTuples = [
             ("", self.shas[n] + "\n") for n in range(start, start + height)
         ]
