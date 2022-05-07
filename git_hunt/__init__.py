@@ -40,9 +40,20 @@ class CommitSHAMargin(Margin):
         self, winfo: WindowRenderInfo, width: int, height: int
     ) -> StyleAndTextTuples:
         start = winfo.vertical_scroll
-        return [
+        margin_text: StyleAndTextTuples = [
             ("", self.shas[n] + "\n") for n in range(start, start + height)
         ]
+        self._highlight_current_line(winfo, margin_text)
+
+        return margin_text
+
+    @staticmethod
+    def _highlight_current_line(
+        winfo: WindowRenderInfo, rows: StyleAndTextTuples
+    ):
+        current_row = winfo.cursor_position.y
+        text = rows[current_row][1]
+        rows[current_row] = ("#ffe100 bold", text)
 
     def get_width(self, _) -> int:
         # Add one for padding
