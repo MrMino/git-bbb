@@ -67,7 +67,6 @@ def __main__():
     output = "".join([b.content for b in blames])
     output = output.rstrip("\n")  # Do not want to render empty line at the end
 
-    # FIXME: PageUp & PageDown keys scroll only one window
     kb = KeyBindings()
 
     @kb.add("q", eager=True)
