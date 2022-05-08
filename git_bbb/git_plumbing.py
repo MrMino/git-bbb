@@ -52,6 +52,7 @@ class BlameLine:
 
 
 def git_blame(path: Path) -> str:
+    # TODO: show proper error messages when this fails
     return subprocess.check_output(
         ["git", "blame", "--line-porcelain", str(path)]
     ).decode("utf-8")
