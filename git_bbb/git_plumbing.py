@@ -51,10 +51,10 @@ class BlameLine:
         return BlameLine(**fields)
 
 
-def git_blame(path: Path) -> str:
+def git_blame(path: Path, rev: str) -> str:
     # TODO: show proper error messages when this fails
     return subprocess.check_output(
-        ["git", "blame", "--line-porcelain", str(path)]
+        ["git", "blame", "--line-porcelain", rev, "--", str(path)]
     ).decode("utf-8")
 
 

@@ -64,8 +64,8 @@ class CommitSHAMargin(Margin):
         return MAX_SHA_CHARS_SHOWN
 
 
-def run(path):
-    blame_output = git_blame(path)
+def run(path, rev):
+    blame_output = git_blame(path, rev)
     blames = parse_git_blame_output(blame_output)
     output = "".join([b.content for b in blames])
     output = output.rstrip("\n")  # Do not render empty line at the end
