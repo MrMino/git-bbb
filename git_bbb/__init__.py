@@ -19,7 +19,11 @@ from prompt_toolkit.layout import (
     Margin,
 )
 
-from .git_plumbing import git_blame, parse_git_blame_output
+from .git_plumbing import (
+    git_blame,
+    parse_git_blame_output,
+    default_ignore_revs,
+)
 
 
 from typing import TYPE_CHECKING, List
@@ -65,6 +69,9 @@ class CommitSHAMargin(Margin):
 
 
 def run(path, rev, ignore_revs_file):
+    if ignore_revs_file is None:
+        ignore_revs_file = default_ignore_revs()
+
     blame_output = git_blame(path, rev, ignore_revs_file)
     blames = parse_git_blame_output(blame_output)
     output = "".join([b.content for b in blames])
