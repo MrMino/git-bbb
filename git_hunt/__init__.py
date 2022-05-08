@@ -4,6 +4,12 @@ from prompt_toolkit.lexers import PygmentsLexer
 
 from prompt_toolkit import Application
 from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.key_binding.bindings.scroll import (
+    scroll_half_page_down,
+    scroll_half_page_up,
+    scroll_one_line_down,
+    scroll_one_line_up,
+)
 from prompt_toolkit.buffer import Buffer, Document
 from prompt_toolkit.layout import (
     Layout,
@@ -79,6 +85,23 @@ def run(path):
     @kb.add("up")
     def scroll_up(event):
         source_buffer_control.move_cursor_up()
+
+    @kb.add("g", "g")
+    @kb.add("<")
+    def go_to_first_line(event):
+        source_buffer.cursor_position = 0
+
+    @kb.add("G")
+    @kb.add(">")
+    def go_to_last_line(event):
+        source_buffer.cursor_position = len(output)
+
+    kb.add("J")(scroll_one_line_down)
+    kb.add("s-down")(scroll_one_line_down)
+    kb.add("K")(scroll_one_line_up)
+    kb.add("s-up")(scroll_one_line_up)
+    kb.add("c-d")(scroll_half_page_down)
+    kb.add("c-u")(scroll_half_page_up)
 
     pygments_lexer = PygmentsLexer.from_filename(path)
 
