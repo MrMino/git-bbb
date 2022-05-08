@@ -1,3 +1,8 @@
+"""Code that handles fetching information from git.
+
+Blame-related functionality is done by us instead of gitpython, becase the
+latter doesn't have all of the necessary functionality.
+"""
 import re
 import subprocess
 from dataclasses import dataclass
