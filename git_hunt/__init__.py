@@ -108,7 +108,11 @@ def run(path):
     source_buffer = Buffer(name="source", read_only=True)
     source_document = Document(output, cursor_position=0)
     source_buffer.set_document(source_document, bypass_readonly=True)
-    source_buffer_control = BufferControl(source_buffer, lexer=pygments_lexer)
+    source_buffer_control = BufferControl(
+        source_buffer,
+        lexer=pygments_lexer,
+        include_default_input_processors=False,
+    )
 
     layout = Layout(
         Window(
