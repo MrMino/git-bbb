@@ -13,5 +13,5 @@ from . import run
         exists=True, readable=True, dir_okay=False, path_type=pathlib.Path
     ),
 )
-def git_hunt(path):
+def git_bbb(path):
     run(path)

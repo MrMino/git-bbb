@@ -1,5 +1,5 @@
 [project]
-name = "git-hunt"
+name = "git-bbb"
 version = "0.0.1"
 dependencies = [
 	"gitpython",
@@ -20,7 +20,7 @@ build-backend = "setuptools.build_meta"
 [options]
 
 [project.scripts]
-git-hunt = "git_hunt.cli:git_hunt"
+git-bbb = "git_bbb.cli:git_bbb"
 
 [options.extras_require]
 test = ["pytest"]
