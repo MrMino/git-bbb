@@ -21,6 +21,9 @@ from . import run
     "path",
     metavar="file",
     type=click.Path(
+        # FIXME: the checks here need to be done based on the revision;
+        # different revisions may contain different file paths, not necesasrily
+        # corresponding to any existing files in the current work tree.
         exists=True, readable=True, dir_okay=False, path_type=pathlib.Path
     ),
 )
