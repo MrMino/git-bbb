@@ -5,6 +5,7 @@ dependencies = [
 	"gitpython",
 	"Pygments",
 	"prompt-toolkit",
+	"click~=8.1"
 ]
 
 [project.optional-dependencies]
@@ -19,7 +20,7 @@ build-backend = "setuptools.build_meta"
 [options]
 
 [project.scripts]
-git-hunt = "git_hunt:__main__"
+git-hunt = "git_hunt.cli:git_hunt"
 
 [options.extras_require]
 test = ["pytest"]

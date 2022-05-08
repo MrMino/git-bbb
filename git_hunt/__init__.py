@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
 from prompt_toolkit.lexers import PygmentsLexer
 
 from prompt_toolkit import Application
@@ -59,8 +56,7 @@ class CommitSHAMargin(Margin):
         return MAX_SHA_CHARS_SHOWN
 
 
-def __main__():
-    path = Path(sys.argv[1])
+def run(path):
     blame_output = git_blame(path)
     blames = parse_git_blame_output(blame_output)
     output = "".join([b.content for b in blames])
