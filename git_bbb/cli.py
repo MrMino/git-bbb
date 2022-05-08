@@ -24,7 +24,10 @@ from . import run
         # FIXME: the checks here need to be done based on the revision;
         # different revisions may contain different file paths, not necesasrily
         # corresponding to any existing files in the current work tree.
-        exists=True, readable=True, dir_okay=False, path_type=pathlib.Path
+        exists=True,
+        readable=True,
+        dir_okay=False,
+        path_type=pathlib.Path,
     ),
 )
 def git_bbb(path, rev):
