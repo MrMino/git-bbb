@@ -7,6 +7,21 @@ from . import run
 
 @click.command(name=sys.argv[0])
 @click.option(
+    "--ignore-revs-file",
+    required=False,
+    default=None,
+    metavar="ignore-revs-file",
+    help=(
+        "Ignore revisions listed in file. See for git-blame manual for more "
+        "information."
+    ),
+    type=click.Path(
+        exists=True,
+        readable=True,
+        dir_okay=False,
+    ),
+)
+@click.option(
     "--rev",
     default="HEAD",
     show_default=True,
@@ -30,5 +45,5 @@ from . import run
         path_type=pathlib.Path,
     ),
 )
-def git_bbb(path, rev):
-    run(path, rev)
+def git_bbb(path, rev, ignore_revs_file):
+    run(path, rev, ignore_revs_file)
