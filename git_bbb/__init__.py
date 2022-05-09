@@ -1,4 +1,3 @@
-
 from prompt_toolkit import Application
 from prompt_toolkit.layout import Layout
 
