@@ -30,7 +30,6 @@ class Browser(Window):
         self._source_buffer = Buffer(name="source", read_only=True)
         self._source_buffer_control = BufferControl(
             self._source_buffer,
-            # lexer=pygments_lexer,
             include_default_input_processors=False,
         )
 
