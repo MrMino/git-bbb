@@ -44,7 +44,7 @@ class Browser(Window):
         self,
         blame_lines: List[BlameLine],
         lexer: PygmentsLexer,
-        cursor_position: int,
+        current_line: int,
     ):
         self._blame_lines = blame_lines
 
@@ -59,6 +59,13 @@ class Browser(Window):
         # different one.
         source_document = Document(output, cursor_position=0)
         self._source_buffer.set_document(source_document, bypass_readonly=True)
+
+        new_cursor_position = source_document.translate_row_col_to_index(
+            # Cursor row position is counted from 0, while line numbers are
+            # counted from 1, hence the -1 below.
+            current_line - 1, 0
+        )
+        self._source_buffer.cursor_position = new_cursor_position
 
     @property
     def current_blame_line(self) -> BlameLine:
@@ -121,8 +128,8 @@ class CommitSHAMargin(Margin):
         return MAX_SHA_CHARS_SHOWN
 
 
-def browse_blame_briskly(browser, path, rev, ignore_revs_file):
+def browse_blame_briskly(browser, path, rev, ignore_revs_file, current_line=0):
     blame_output = git_blame(path, rev, ignore_revs_file)
     blames = parse_git_blame_output(blame_output)
     pygments_lexer = PygmentsLexer.from_filename(path)
-    browser.browse_blame(blames, pygments_lexer, cursor_position=0)
+    browser.browse_blame(blames, pygments_lexer, current_line)
