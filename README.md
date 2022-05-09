@@ -1,12 +1,15 @@
-<p align="center"><h2>Brisk Blame Browser for Git</h2></p>
+<h1 align="center">Brisk Blame Browser for Git ⚡</h3>
+<p align="center">
+<img src="https://img.shields.io/pypi/v/git-bbb?style=for-the-badge" alt="PyPI"/>
+<img src="https://img.shields.io/github/license/mrmino/git-bbb?style=for-the-badge", alt="GitHub License"/>
+</p>
 
-![PyPI](https://img.shields.io/pypi/v/git-bbb?style=for-the-badge)
-![GitHub](https://img.shields.io/github/license/mrmino/git-bbb?style=for-the-badge)
-
-`git-bbb` is a wraper around `git blame`, that let's you seamlessly warp
+<p align="center">
+ <code>git-bbb</code> is a wraper around <code>git blame</code>, that let's you seamlessly warp
 between different revisions.
+</p>
 
-### Features ⚡
+### Features ✨
 
 The project is in its early stages of development, many features are still to
 be worked out. For now, the most notable features are:
