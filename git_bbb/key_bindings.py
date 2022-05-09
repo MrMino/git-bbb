@@ -1,3 +1,5 @@
+import os
+
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.key_binding.bindings.scroll import (
     scroll_half_page_down,
@@ -5,6 +7,7 @@ from prompt_toolkit.key_binding.bindings.scroll import (
     scroll_one_line_down,
     scroll_one_line_up,
 )
+from prompt_toolkit.filters import Condition
 
 from .browser import browse_blame_briskly
 
@@ -43,6 +46,12 @@ def generate_bindings(browser, ignore_revs_file) -> KeyBindings:
     @kb.add(">")
     def go_to_last_line(event):
         browser.go_to_last_line()
+
+    @kb.add("D", "B", "G", filter=Condition(lambda: "DEBUG" in os.environ))
+    def set_trace(event):
+        import ipdb  # type: ignore
+        ipdb.set_trace()
+        browser  # Needs to be here so that we can access it in the debugger
 
     kb.add("J")(scroll_one_line_down)
     kb.add("s-down")(scroll_one_line_down)
