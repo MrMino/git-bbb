@@ -4,6 +4,7 @@ from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.layout import Margin
 from prompt_toolkit.buffer import Buffer, Document
 from prompt_toolkit.layout import (
+    HSplit,
     Window,
     BufferControl,
     NumberedMargin,
@@ -23,7 +24,7 @@ if TYPE_CHECKING:
     from .git_plumbing import BlameLine
 
 
-class Browser(Window):
+class Browser(HSplit):
     def __init__(self):
         self._blame_lines = []
         self._source_buffer = Buffer(name="source", read_only=True)
@@ -35,13 +36,17 @@ class Browser(Window):
         self._sha_list_margin = CommitSHAMargin()
 
         super().__init__(
-            left_margins=[
-                self._sha_list_margin,
-                PaddingMargin(1),
-                NumberedMargin(),
-            ],
-            content=self._source_buffer_control,
-            always_hide_cursor=True,
+            [
+                Window(
+                    left_margins=[
+                        self._sha_list_margin,
+                        PaddingMargin(1),
+                        NumberedMargin(),
+                    ],
+                    content=self._source_buffer_control,
+                    always_hide_cursor=True,
+                ),
+            ]
         )
 
     def browse_blame(
