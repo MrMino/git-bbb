@@ -1,6 +1,7 @@
 <p align="center"><h1>Brisk Blame Browser for Git</h1></p>
 
 ![PyPI](https://img.shields.io/pypi/v/git-bbb?style=for-the-badge)
+![GitHub](https://img.shields.io/github/license/mrmino/git-bbb?style=for-the-badge)
 
 `git-bbb` is a wraper around `git blame`, that let's you seamlessly warp
 between different revisions.
