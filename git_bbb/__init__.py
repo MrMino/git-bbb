@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from prompt_toolkit.lexers import PygmentsLexer
 
 from prompt_toolkit import Application
@@ -16,7 +14,6 @@ from prompt_toolkit.layout import (
     Window,
     BufferControl,
     NumberedMargin,
-    Margin,
 )
 
 from .git_plumbing import (
@@ -24,48 +21,11 @@ from .git_plumbing import (
     parse_git_blame_output,
     default_ignore_revs,
 )
-
-
-from typing import TYPE_CHECKING, List
-
-if TYPE_CHECKING:
-    from prompt_toolkit.layout import WindowRenderInfo
-    from prompt_toolkit.formatted_text import StyleAndTextTuples
+from .browser import CommitSHAMargin
 
 import logging
 
 logger = logging.getLogger(__name__)
-MAX_SHA_CHARS_SHOWN = 16
-
-
-class CommitSHAMargin(Margin):
-    def __init__(self, shas: List[str]):
-        self.shas = shas
-        self.max_height = len(shas)
-
-    def create_margin(
-        self, winfo: WindowRenderInfo, width: int, height: int
-    ) -> StyleAndTextTuples:
-        start = winfo.vertical_scroll
-        end = min(start + self.max_height, start + height)
-        # TODO: mouse click on the margin should change cursor position
-        margin_text: StyleAndTextTuples = [
-            ("", self.shas[n] + "\n") for n in range(start, end)
-        ]
-        self._highlight_current_line(winfo, margin_text)
-
-        return margin_text
-
-    @staticmethod
-    def _highlight_current_line(
-        winfo: WindowRenderInfo, rows: StyleAndTextTuples
-    ):
-        current_row = winfo.cursor_position.y
-        text = rows[current_row][1]
-        rows[current_row] = ("#ffe100 bold", text)
-
-    def get_width(self, _) -> int:
-        return MAX_SHA_CHARS_SHOWN
 
 
 def run(path, rev, ignore_revs_file):
