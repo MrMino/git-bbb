@@ -62,6 +62,10 @@ class Browser(Window):
             self._source_document, bypass_readonly=True
         )
 
+    @property
+    def current_blame_line(self) -> BlameLine:
+        return self._blame_lines[self._source_document.cursor_position_row]
+
     def cursor_down(self):
         self._source_buffer_control.move_cursor_down()
 

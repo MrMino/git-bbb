@@ -6,9 +6,18 @@ from prompt_toolkit.key_binding.bindings.scroll import (
     scroll_one_line_up,
 )
 
+from .browser import browse_blame_briskly
 
-def generate_bindings(browser) -> KeyBindings:
+
+def generate_bindings(browser, ignore_revs_file) -> KeyBindings:
     kb = KeyBindings()
+
+    @kb.add("enter")
+    def warp(event):
+        blame = browser.current_blame_line
+        new_file_path = blame.previous_filename
+        new_rev = blame.sha
+        browse_blame_briskly(browser, new_file_path, new_rev, ignore_revs_file)
 
     @kb.add("q", eager=True)
     def exit(event):

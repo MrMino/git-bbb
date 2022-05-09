@@ -19,7 +19,9 @@ def run(path, rev, ignore_revs_file):
     browse_blame_briskly(browser, path, rev, ignore_revs_file)
 
     layout = Layout(browser)
-    key_bindings = generate_bindings(browser)
+    # TODO: make a class for git blame parser and keep ignore-revs path in it,
+    # instead of passing it around alone.
+    key_bindings = generate_bindings(browser, ignore_revs_file)
 
     app = Application(
         full_screen=True,
