@@ -15,6 +15,8 @@ from .browser import browse_blame_briskly
 def generate_bindings(browser, ignore_revs_file) -> KeyBindings:
     kb = KeyBindings()
 
+    # TODO: undo, redo, reset
+
     @kb.add("enter")
     def warp(event):
         # TODO: this code shouldn't be in keybinding function
