@@ -13,15 +13,24 @@ MAX_SHA_CHARS_SHOWN = 16
 
 
 class CommitSHAMargin(Margin):
-    def __init__(self, shas: List[str]):
-        self.shas = shas
-        self.max_height = len(shas)
+    def __init__(self):
+        self._shas = []
+        self._max_height = 0
+
+    @property
+    def shas(self):
+        return self._shas
+
+    @shas.setter
+    def shas(self, shas: List[str]):
+        self._shas = shas
+        self._max_height = len(shas)
 
     def create_margin(
         self, winfo: WindowRenderInfo, width: int, height: int
     ) -> StyleAndTextTuples:
         start = winfo.vertical_scroll
-        end = min(start + self.max_height, start + height)
+        end = min(start + self._max_height, start + height)
         # TODO: mouse click on the margin should change cursor position
         margin_text: StyleAndTextTuples = [
             ("", self.shas[n] + "\n") for n in range(start, end)

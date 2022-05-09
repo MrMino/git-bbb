@@ -81,11 +81,14 @@ def run(path, rev, ignore_revs_file):
         include_default_input_processors=False,
     )
 
+    sha_list_margin = CommitSHAMargin()
+    sha_list_margin.shas = [b.sha for b in blames]
+
     layout = Layout(
         Window(
             # TODO: padding between margins
             left_margins=[
-                CommitSHAMargin([b.sha for b in blames]),
+                sha_list_margin,
                 NumberedMargin(),
             ],
             content=source_buffer_control,
