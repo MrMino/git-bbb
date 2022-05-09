@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.layout import Margin
 from prompt_toolkit.buffer import Buffer, Document
 from prompt_toolkit.layout import (
@@ -8,13 +9,17 @@ from prompt_toolkit.layout import (
     NumberedMargin,
 )
 
+from .git_plumbing import (
+    git_blame,
+    parse_git_blame_output,
+)
+
 
 from typing import TYPE_CHECKING, List
 
 if TYPE_CHECKING:
     from prompt_toolkit.layout import WindowRenderInfo
     from prompt_toolkit.formatted_text import StyleAndTextTuples
-    from prompt_toolkit.lexers import PygmentsLexer
     from .git_plumbing import BlameLine
 
 
@@ -111,3 +116,10 @@ class CommitSHAMargin(Margin):
 
     def get_width(self, _) -> int:
         return MAX_SHA_CHARS_SHOWN
+
+
+def browse_blame_briskly(browser, path, rev, ignore_revs_file):
+    blame_output = git_blame(path, rev, ignore_revs_file)
+    blames = parse_git_blame_output(blame_output)
+    pygments_lexer = PygmentsLexer.from_filename(path)
+    browser.browse_blame(blames, pygments_lexer, cursor_position=0)
