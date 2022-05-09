@@ -8,20 +8,14 @@ from prompt_toolkit.key_binding.bindings.scroll import (
     scroll_one_line_down,
     scroll_one_line_up,
 )
-from prompt_toolkit.buffer import Buffer, Document
-from prompt_toolkit.layout import (
-    Layout,
-    Window,
-    BufferControl,
-    NumberedMargin,
-)
+from prompt_toolkit.layout import Layout
 
 from .git_plumbing import (
     git_blame,
     parse_git_blame_output,
     default_ignore_revs,
 )
-from .browser import CommitSHAMargin
+from .browser import Browser
 
 import logging
 
@@ -34,8 +28,6 @@ def run(path, rev, ignore_revs_file):
 
     blame_output = git_blame(path, rev, ignore_revs_file)
     blames = parse_git_blame_output(blame_output)
-    output = "".join([b.content for b in blames])
-    output = output.rstrip("\n")  # Do not render empty line at the end
 
     kb = KeyBindings()
 
@@ -46,22 +38,22 @@ def run(path, rev, ignore_revs_file):
     @kb.add("j")
     @kb.add("down")
     def scroll_down(event):
-        source_buffer_control.move_cursor_down()
+        browser.cursor_down()
 
     @kb.add("k")
     @kb.add("up")
     def scroll_up(event):
-        source_buffer_control.move_cursor_up()
+        browser.cursor_up()
 
     @kb.add("g", "g")
     @kb.add("<")
     def go_to_first_line(event):
-        source_buffer.cursor_position = 0
+        browser.go_to_first_line()
 
     @kb.add("G")
     @kb.add(">")
     def go_to_last_line(event):
-        source_buffer.cursor_position = len(output)
+        browser.go_to_last_line()
 
     kb.add("J")(scroll_one_line_down)
     kb.add("s-down")(scroll_one_line_down)
@@ -72,29 +64,10 @@ def run(path, rev, ignore_revs_file):
 
     pygments_lexer = PygmentsLexer.from_filename(path)
 
-    source_buffer = Buffer(name="source", read_only=True)
-    source_document = Document(output, cursor_position=0)
-    source_buffer.set_document(source_document, bypass_readonly=True)
-    source_buffer_control = BufferControl(
-        source_buffer,
-        lexer=pygments_lexer,
-        include_default_input_processors=False,
-    )
+    browser = Browser()
+    browser.browse_blame(blames, pygments_lexer, cursor_position=0)
 
-    sha_list_margin = CommitSHAMargin()
-    sha_list_margin.shas = [b.sha for b in blames]
-
-    layout = Layout(
-        Window(
-            # TODO: padding between margins
-            left_margins=[
-                sha_list_margin,
-                NumberedMargin(),
-            ],
-            content=source_buffer_control,
-            always_hide_cursor=True,
-        ),
-    )
+    layout = Layout(browser)
 
     app = Application(
         full_screen=True,

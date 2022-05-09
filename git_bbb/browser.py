@@ -1,12 +1,74 @@
 from __future__ import annotations
 
 from prompt_toolkit.layout import Margin
+from prompt_toolkit.buffer import Buffer, Document
+from prompt_toolkit.layout import (
+    Window,
+    BufferControl,
+    NumberedMargin,
+)
+
 
 from typing import TYPE_CHECKING, List
 
 if TYPE_CHECKING:
     from prompt_toolkit.layout import WindowRenderInfo
     from prompt_toolkit.formatted_text import StyleAndTextTuples
+    from prompt_toolkit.lexers import PygmentsLexer
+    from .git_plumbing import BlameLine
+
+
+class Browser(Window):
+    def __init__(self):
+        self._blame_lines = []
+        self._source_document = None
+        self._source_buffer = Buffer(name="source", read_only=True)
+        self._source_buffer_control = BufferControl(
+            self._source_buffer,
+            # lexer=pygments_lexer,
+            include_default_input_processors=False,
+        )
+
+        self._sha_list_margin = CommitSHAMargin()
+
+        super().__init__(
+            left_margins=[self._sha_list_margin, NumberedMargin()],
+            content=self._source_buffer_control,
+            always_hide_cursor=True,
+        )
+
+    def browse_blame(
+        self,
+        blame_lines: List[BlameLine],
+        lexer: PygmentsLexer,
+        cursor_position: int,
+    ):
+        self._blame_lines = blame_lines
+
+        output = "".join([b.content for b in self._blame_lines])
+        output = output.rstrip("\n")  # Do not render empty line at the end
+        self._content = output
+
+        self._source_buffer_control.lexer = lexer
+        self._sha_list_margin.shas = [b.sha for b in self._blame_lines]
+        self._source_document = Document(
+            output, cursor_position=cursor_position
+        )
+        self._source_buffer.set_document(
+            self._source_document, bypass_readonly=True
+        )
+
+    def cursor_down(self):
+        self._source_buffer_control.move_cursor_down()
+
+    def cursor_up(self):
+        self._source_buffer_control.move_cursor_up()
+
+    def go_to_first_line(self):
+        self._source_buffer.cursor_position = 0
+
+    def go_to_last_line(self):
+        self._source_buffer.cursor_position = len(self._content)
 
 
 MAX_SHA_CHARS_SHOWN = 16
