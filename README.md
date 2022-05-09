@@ -1,4 +1,4 @@
-<p align="center"><h1>Brisk Blame Browser for Git</h1></p>
+<p align="center"><h2>Brisk Blame Browser for Git</h2></p>
 
 ![PyPI](https://img.shields.io/pypi/v/git-bbb?style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/mrmino/git-bbb?style=for-the-badge)
