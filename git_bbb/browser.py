@@ -96,7 +96,7 @@ class Browser(HSplit):
         self._source_buffer.cursor_position = len(self._content)
 
 
-MAX_SHA_CHARS_SHOWN = 16
+MAX_SHA_CHARS_SHOWN = 12
 
 
 class CommitSHAMargin(Margin):
