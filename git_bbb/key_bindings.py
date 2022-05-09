@@ -14,6 +14,7 @@ def generate_bindings(browser, ignore_revs_file) -> KeyBindings:
 
     @kb.add("enter")
     def warp(event):
+        # TODO: this code shouldn't be in keybinding function
         blame = browser.current_blame_line
         new_file_path = blame.previous_filename
         new_rev = blame.sha
