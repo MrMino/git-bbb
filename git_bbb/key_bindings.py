@@ -19,7 +19,7 @@ def generate_bindings(browser, ignore_revs_file) -> KeyBindings:
     def warp(event):
         # TODO: this code shouldn't be in keybinding function
         blame = browser.current_blame_line
-        new_file_path = blame.previous_filename
+        new_file_path = blame.original_filename
         new_rev = blame.sha
         browse_blame_briskly(browser, new_file_path, new_rev, ignore_revs_file)
 
