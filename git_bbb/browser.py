@@ -128,7 +128,7 @@ class CommitSHAMargin(Margin):
         return MAX_SHA_CHARS_SHOWN
 
 
-def browse_blame_briskly(browser, path, rev, ignore_revs_file, current_line=0):
+def browse_blame_briskly(browser, path, rev, ignore_revs_file, current_line=1):
     blame_output = git_blame(path, rev, ignore_revs_file)
     blames = parse_git_blame_output(blame_output)
     pygments_lexer = PygmentsLexer.from_filename(path)
