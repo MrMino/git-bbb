@@ -67,7 +67,8 @@ class Browser(Window):
         new_cursor_position = source_document.translate_row_col_to_index(
             # Cursor row position is counted from 0, while line numbers are
             # counted from 1, hence the -1 below.
-            current_line - 1, 0
+            current_line - 1,
+            0,
         )
         self._source_buffer.cursor_position = new_cursor_position
 
