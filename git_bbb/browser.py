@@ -26,7 +26,6 @@ if TYPE_CHECKING:
 class Browser(Window):
     def __init__(self):
         self._blame_lines = []
-        self._source_document = None
         self._source_buffer = Buffer(name="source", read_only=True)
         self._source_buffer_control = BufferControl(
             self._source_buffer,
@@ -55,16 +54,17 @@ class Browser(Window):
 
         self._source_buffer_control.lexer = lexer
         self._sha_list_margin.shas = [b.sha for b in self._blame_lines]
-        self._source_document = Document(
-            output, cursor_position=cursor_position
-        )
-        self._source_buffer.set_document(
-            self._source_document, bypass_readonly=True
-        )
+        # XXX: Do not save Documents - they are immutable and as soon as cursor
+        # position changes, the actual document in the buffer is changed to a
+        # different one.
+        source_document = Document(output, cursor_position=0)
+        self._source_buffer.set_document(source_document, bypass_readonly=True)
 
     @property
     def current_blame_line(self) -> BlameLine:
-        return self._blame_lines[self._source_document.cursor_position_row]
+        return self._blame_lines[
+            self._source_buffer.document.cursor_position_row
+        ]
 
     def cursor_down(self):
         self._source_buffer_control.move_cursor_down()
