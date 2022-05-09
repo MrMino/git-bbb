@@ -35,7 +35,11 @@ class Browser(Window):
         self._sha_list_margin = CommitSHAMargin()
 
         super().__init__(
-            left_margins=[self._sha_list_margin, NumberedMargin()],
+            left_margins=[
+                self._sha_list_margin,
+                PaddingMargin(1),
+                NumberedMargin(),
+            ],
             content=self._source_buffer_control,
             always_hide_cursor=True,
         )
@@ -126,6 +130,19 @@ class CommitSHAMargin(Margin):
 
     def get_width(self, _) -> int:
         return MAX_SHA_CHARS_SHOWN
+
+
+class PaddingMargin(Margin):
+    def __init__(self, width: int):
+        self.width = width
+
+    def create_margin(
+        self, _: WindowRenderInfo, width: int, height: int
+    ) -> StyleAndTextTuples:
+        return [("", " " * min(width, self.width))] * height
+
+    def get_width(self, _) -> int:
+        return self.width
 
 
 def browse_blame_briskly(browser, path, rev, ignore_revs_file, current_line=1):
