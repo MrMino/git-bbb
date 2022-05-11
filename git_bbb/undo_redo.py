@@ -37,8 +37,8 @@ class RevStack:
 
         return self.stack[self.stack_pointer]
 
-    def do(self, rev: RevBrowseInfo):
+    def do(self, rev_info: RevBrowseInfo):
         """Add rev to the stack after current position, remove undone revs."""
         self.stack_pointer += 1
         self.stack = self.stack[: self.stack_pointer]
-        self.stack.append(rev)
+        self.stack.append(rev_info)
