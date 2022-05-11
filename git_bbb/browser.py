@@ -25,6 +25,9 @@ if TYPE_CHECKING:
     from .git_plumbing import BlameLine
 
 
+MAX_SHA_CHARS_SHOWN = 12
+
+
 class Statusbar(Window):
     def __init__(self, text, style=None):
         self._control = FormattedTextControl(text, style=style)
@@ -41,6 +44,7 @@ class Statusbar(Window):
 
 class Browser(HSplit):
     def __init__(self):
+        self._current_sha: str = None
         self._blame_lines = []
         self._source_buffer = Buffer(name="source", read_only=True)
         self._source_buffer_control = BufferControl(
@@ -68,11 +72,19 @@ class Browser(HSplit):
 
     def browse_blame(
         self,
+        current_sha: str,
         blame_lines: List[BlameLine],
         lexer: PygmentsLexer,
         current_line: int,
     ):
+        self._current_sha = current_sha
         self._blame_lines = blame_lines
+
+        statusbar_content = [
+            ("", "Currently viewing: "),
+            ("#dede00", current_sha[:MAX_SHA_CHARS_SHOWN]),
+        ]
+        self._statusbar.text = statusbar_content
 
         output = "".join([b.content for b in self._blame_lines])
         output = output.rstrip("\n")  # Do not render empty line at the end
@@ -111,9 +123,6 @@ class Browser(HSplit):
 
     def go_to_last_line(self):
         self._source_buffer.cursor_position = len(self._content)
-
-
-MAX_SHA_CHARS_SHOWN = 12
 
 
 class CommitSHAMargin(Margin):
@@ -172,4 +181,4 @@ def browse_blame_briskly(browser, path, rev, ignore_revs_file, current_line=1):
     blame_output = git_blame(path, rev, ignore_revs_file)
     blames = parse_git_blame_output(blame_output)
     pygments_lexer = PygmentsLexer.from_filename(path)
-    browser.browse_blame(blames, pygments_lexer, current_line)
+    browser.browse_blame(rev, blames, pygments_lexer, current_line)
