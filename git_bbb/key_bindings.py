@@ -10,12 +10,15 @@ from prompt_toolkit.key_binding.bindings.scroll import (
 from prompt_toolkit.filters import Condition
 
 from .browser import browse_blame_briskly
+from .undo_redo import RevBrowseInfo
 
 
-def generate_bindings(browser, ignore_revs_file) -> KeyBindings:
+def generate_bindings(
+    browser, undo_redo_stack, ignore_revs_file
+) -> KeyBindings:
     kb = KeyBindings()
 
-    # TODO: undo, redo, reset
+    # TODO: reset
 
     @kb.add("enter")
     def warp(event):
@@ -24,6 +27,8 @@ def generate_bindings(browser, ignore_revs_file) -> KeyBindings:
         new_file_path = blame.original_filename
         new_rev = blame.sha
         new_lineno = blame.original_line_number
+        rev_info = RevBrowseInfo(new_rev, new_file_path, new_lineno)
+        undo_redo_stack.do(rev_info)
         browse_blame_briskly(
             browser, ignore_revs_file, new_rev, new_file_path, new_lineno
         )
@@ -64,5 +69,23 @@ def generate_bindings(browser, ignore_revs_file) -> KeyBindings:
     kb.add("s-up")(scroll_one_line_up)
     kb.add("c-d")(scroll_half_page_down)
     kb.add("c-u")(scroll_half_page_up)
+
+    @kb.add("u")
+    def undo(event):
+        rev_info = undo_redo_stack.undo()
+        if rev_info is None:
+            return
+
+        rev, file_path, lineno = rev_info
+        browse_blame_briskly(browser, ignore_revs_file, rev, file_path)
+
+    @kb.add("c-r")
+    def redo(event):
+        rev_info = undo_redo_stack.redo()
+        if rev_info is None:
+            return
+
+        rev, file_path, lineno = rev_info
+        browse_blame_briskly(browser, ignore_revs_file, rev, file_path)
 
     return kb
