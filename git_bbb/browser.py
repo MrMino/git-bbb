@@ -7,6 +7,7 @@ from prompt_toolkit.layout import (
     HSplit,
     Window,
     BufferControl,
+    FormattedTextControl,
     NumberedMargin,
 )
 
@@ -24,6 +25,20 @@ if TYPE_CHECKING:
     from .git_plumbing import BlameLine
 
 
+class Statusbar(Window):
+    def __init__(self, text, style=None):
+        self._control = FormattedTextControl(text, style=style)
+        super().__init__(content=self._control, style=style)
+
+    @property
+    def text(self):
+        return self._control.text
+
+    @text.setter
+    def text(self, new_text):
+        self._control.text = new_text
+
+
 class Browser(HSplit):
     def __init__(self):
         self._blame_lines = []
@@ -35,6 +50,7 @@ class Browser(HSplit):
 
         self._sha_list_margin = CommitSHAMargin()
 
+        self._statusbar = Statusbar("", style="bg:#333")
         super().__init__(
             [
                 Window(
@@ -46,6 +62,7 @@ class Browser(HSplit):
                     content=self._source_buffer_control,
                     always_hide_cursor=True,
                 ),
+                self._statusbar
             ]
         )
 
