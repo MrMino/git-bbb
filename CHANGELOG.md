@@ -7,6 +7,8 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
+* Added a status bar that shows currently viewed rev.
+
 ## [0.0.1] - 2022-05-08
 
 This is the first version of `git-bbb`, with the most basic functionality
