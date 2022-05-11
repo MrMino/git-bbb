@@ -82,7 +82,7 @@ class Browser(HSplit):
 
         statusbar_content = [
             ("", "Currently viewing: "),
-            ("#dede00", current_sha[:MAX_SHA_CHARS_SHOWN]),
+            ("#dede00", current_sha),
         ]
         self._statusbar.text = statusbar_content
 
