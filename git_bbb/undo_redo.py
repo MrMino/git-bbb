@@ -37,8 +37,16 @@ class RevStack:
 
         return self.stack[self.stack_pointer]
 
+    @property
+    def current(self):
+        return self.stack[self.stack_pointer]
+
     def do(self, rev_info: RevBrowseInfo):
         """Add rev to the stack after current position, remove undone revs."""
+        # Skip if we haven't changed revs
+        if rev_info.rev == self.current.rev:
+            return
+
         self.stack_pointer += 1
         self.stack = self.stack[: self.stack_pointer]
         self.stack.append(rev_info)
