@@ -25,7 +25,7 @@ def generate_bindings(browser, ignore_revs_file) -> KeyBindings:
         new_rev = blame.sha
         new_lineno = blame.original_line_number
         browse_blame_briskly(
-            browser, new_file_path, new_rev, ignore_revs_file, new_lineno
+            browser, ignore_revs_file, new_rev, new_file_path, new_lineno
         )
 
     @kb.add("q", eager=True)

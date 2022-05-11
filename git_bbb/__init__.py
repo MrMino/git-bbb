@@ -15,7 +15,7 @@ def run(path, rev, ignore_revs_file):
         ignore_revs_file = default_ignore_revs()
 
     browser = Browser()
-    browse_blame_briskly(browser, path, rev, ignore_revs_file)
+    browse_blame_briskly(browser, ignore_revs_file, rev, path)
 
     layout = Layout(browser)
     # TODO: make a class for git blame parser and keep ignore-revs path in it,
