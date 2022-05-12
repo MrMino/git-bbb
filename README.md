@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
- <code>git-bbb</code> is a wraper around <code>git blame</code>, that let's you seamlessly warp
+ <code>git-bbb</code> is a wraper around <code>git blame</code>, that lets you seamlessly warp
 between different revisions.
 </p>
 
