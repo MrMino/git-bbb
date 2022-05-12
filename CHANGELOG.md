@@ -7,6 +7,8 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
+## [0.0.2] - 2022-05-12
+
 * Added a status bar that shows currently viewed rev.
 * Added undo/redo functionality, bound to <kbd>u</kbd> and <kbd>ctrl+r</kbd>
   keys, respectively.
