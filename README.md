@@ -37,12 +37,14 @@ git bbb file/in/the/repo
 
 - Use <kbd>h</kbd> & <kbd>j</kbd> or <kbd>↓</kbd> & <kbd>↑</kbd> to move to the
   next/previous blame line
+- <kbd>Enter</kbd> to switch (_warp_) to the highlighted revision.
+- <kbd>u</kbd> to go back to the previously viewed revision - a.k.a. _undo_.
+- <kbd>ctrl</kbd>+<kbd>r</kbd> to _redo_ previous warp.
 - <kbd>H</kbd> & <kbd>J</kbd> move the whole document view up and down
 - <kbd>gg</kbd> and <kbd>G</kbd> will make git bbb go to the first and last
   line, respectively
 - <kbd>Ctrl</kbd>+<kbd>d</kbd> and <kbd>Ctrl</kbd>+<kbd>u</kbd> will scroll
   half a page up and down, respectively
 - <kbd>Page Up</kbd> & <kbd>Page Down</kbd> do what they are supposed to do
-- <kbd>Enter</kbd> to switch to the highlighted revision
 - <kbd>q</kbd> to quit
 - ...many more to come
