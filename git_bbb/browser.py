@@ -78,7 +78,7 @@ class Browser(HSplit):
         current_line: int,
     ):
         if current_sha is None:
-            current_sha = "worktree"
+            current_sha = "worktree".rjust(MAX_SHA_CHARS_SHOWN)
 
         self._current_sha = current_sha
         self._blame_lines = blame_lines
