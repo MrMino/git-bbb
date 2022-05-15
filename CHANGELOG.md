@@ -10,6 +10,10 @@ on the willingness of the author to come up with any and stick to it.
 
 * Bbb will show unstaged changes if `--rev` is not given.
 
+### Changed
+
+* Undo / redo will now go back to the line on which the cursor was after a warp.
+
 ## [0.0.2] - 2022-05-12
 ### Added
 

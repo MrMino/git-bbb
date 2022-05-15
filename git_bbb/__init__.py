@@ -15,7 +15,7 @@ def run(path, rev, ignore_revs_file):
     if ignore_revs_file is None:
         ignore_revs_file = default_ignore_revs()
 
-    rev_info = RevBrowseInfo(rev, path, 0)
+    rev_info = RevBrowseInfo(rev, path, 1)
     undo_redo_stack = RevStack(rev_info)
 
     browser = Browser()

@@ -77,7 +77,7 @@ def generate_bindings(
             return
 
         rev, file_path, lineno = rev_info
-        browse_blame_briskly(browser, ignore_revs_file, rev, file_path)
+        browse_blame_briskly(browser, ignore_revs_file, rev, file_path, lineno)
 
     @kb.add("c-r")
     def redo(event):
@@ -86,6 +86,6 @@ def generate_bindings(
             return
 
         rev, file_path, lineno = rev_info
-        browse_blame_briskly(browser, ignore_revs_file, rev, file_path)
+        browse_blame_briskly(browser, ignore_revs_file, rev, file_path, lineno)
 
     return kb
