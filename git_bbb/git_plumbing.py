@@ -3,6 +3,7 @@
 Blame-related functionality is done by us instead of gitpython, becase the
 latter doesn't have all of the necessary functionality.
 """
+import os
 import re
 import subprocess
 from dataclasses import dataclass
@@ -60,9 +61,24 @@ class BlameLine:
 
 def git_show(rev: Optional[str]):
     cmd = ["git", "show"]
+    env = os.environ.copy()
+    # FIXME: Delta will set Less with --quit-on-eof by default
+    #
+    # This behavior would have to be sidestepped by implementing .gitconfig
+    # settings for git-bbb, so that one can specify a pager for git-bbb
+    # separately to git-show:
+    #
+    #     [pager]
+    #         show = delta
+    #         bbb = delta --paging=always
+    #
+    # This could also be achieved if Delta took options by an environment
+    # variable. It is preferrable, but (? most likely ?) so not implemented in
+    # Delta yet.
+    env["DELTA_PAGER"] = "less -+F"
     if rev:
         cmd += [rev]
-    subprocess.run(cmd)
+    subprocess.run(cmd, env=env)
 
 
 def git_blame(
