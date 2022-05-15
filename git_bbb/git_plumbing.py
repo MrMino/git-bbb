@@ -58,6 +58,13 @@ class BlameLine:
         return BlameLine(**fields)
 
 
+def git_show(rev: Optional[str]):
+    cmd = ["git", "show"]
+    if rev:
+        cmd += [rev]
+    subprocess.run(cmd)
+
+
 def git_blame(
     path: Path, rev: Optional[str], ignore_revs_file: Optional[str]
 ) -> str:

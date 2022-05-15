@@ -88,4 +88,8 @@ def generate_bindings(
         rev, file_path, lineno = rev_info
         browse_blame_briskly(browser, ignore_revs_file, rev, file_path, lineno)
 
+    @kb.add("S")
+    def use_git_show(event):
+        browser.run_git_show_for_line()
+
     return kb

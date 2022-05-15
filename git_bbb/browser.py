@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from prompt_toolkit.application import run_in_terminal
 from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.layout import Margin
 from prompt_toolkit.buffer import Buffer, Document
@@ -12,6 +13,7 @@ from prompt_toolkit.layout import (
 )
 
 from .git_plumbing import (
+    git_show,
     git_blame,
     parse_git_blame_output,
 )
@@ -132,6 +134,9 @@ class Browser(HSplit):
 
     def go_to_last_line(self):
         self._source_buffer.cursor_position = len(self._content)
+
+    def run_git_show_for_line(self):
+        run_in_terminal(lambda: git_show(self.current_blame_line.sha))
 
 
 class CommitSHAMargin(Margin):

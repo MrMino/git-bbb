@@ -9,6 +9,7 @@ on the willingness of the author to come up with any and stick to it.
 ### Added
 
 * Statusbar now shows the summary of the indicated commit.
+* <kbd>S</kbd> will run `git show` for the current line
 
 ### Fixed
 
