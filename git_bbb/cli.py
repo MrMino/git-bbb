@@ -24,7 +24,7 @@ from . import run
 )
 @click.option(
     "--rev",
-    default="HEAD",
+    default=None,
     show_default=True,
     metavar="revision",
     help=(

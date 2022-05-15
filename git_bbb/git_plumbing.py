@@ -58,11 +58,15 @@ class BlameLine:
         return BlameLine(**fields)
 
 
-def git_blame(path: Path, rev: str, ignore_revs_file: Optional[str]) -> str:
+def git_blame(
+    path: Path, rev: Optional[str], ignore_revs_file: Optional[str]
+) -> str:
     cmd = ["git", "blame", "--line-porcelain"]
     if ignore_revs_file is not None:
         cmd += ["--ignore-revs-file", ignore_revs_file]
-    cmd += [rev, "--", str(path)]
+    if rev is not None:
+        cmd += [rev, "--"]
+    cmd += [str(path)]
     # TODO: show proper error messages when this fails
     return subprocess.check_output(cmd).decode("utf-8")
 

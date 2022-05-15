@@ -6,6 +6,9 @@ and this project **DOES NOT** adhere to Semantic Versioning. Versioning is based
 on the willingness of the author to come up with any and stick to it. 
 
 ## [Unreleased]
+### Fixed
+
+* Bbb will show unstaged changes if `--rev` is not given.
 
 ## [0.0.2] - 2022-05-12
 ### Added

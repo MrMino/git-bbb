@@ -77,6 +77,9 @@ class Browser(HSplit):
         lexer: PygmentsLexer,
         current_line: int,
     ):
+        if current_sha is None:
+            current_sha = "worktree"
+
         self._current_sha = current_sha
         self._blame_lines = blame_lines
 
