@@ -68,7 +68,7 @@ class Browser(HSplit):
                     content=self._source_buffer_control,
                     always_hide_cursor=True,
                 ),
-                self._statusbar
+                self._statusbar,
             ]
         )
 
