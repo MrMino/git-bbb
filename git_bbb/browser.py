@@ -33,7 +33,7 @@ MAX_SHA_CHARS_SHOWN = 12
 class Statusbar(Window):
     def __init__(self, text, style=None):
         self._control = FormattedTextControl(text, style=style)
-        super().__init__(content=self._control, style=style)
+        super().__init__(content=self._control, style=style, height=1)
 
     @property
     def text(self):
