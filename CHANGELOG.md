@@ -6,6 +6,10 @@ and this project **DOES NOT** adhere to Semantic Versioning. Versioning is based
 on the willingness of the author to come up with any and stick to it. 
 
 ## [Unreleased]
+### Added
+
+* Statusbar now shows the summary of the indicated commit.
+
 ### Fixed
 
 * Bbb will show unstaged changes if `--rev` is not given.

@@ -77,17 +77,10 @@ class Browser(HSplit):
         lexer: PygmentsLexer,
         current_line: int,
     ):
-        if current_sha is None:
-            current_sha = "worktree".rjust(MAX_SHA_CHARS_SHOWN)
-
         self._current_sha = current_sha
         self._blame_lines = blame_lines
 
-        statusbar_content = [
-            ("", "Currently viewing: "),
-            ("#dede00", current_sha),
-        ]
-        self._statusbar.text = statusbar_content
+        self._update_statusbar()
 
         output = "".join([b.content for b in self._blame_lines])
         output = output.rstrip("\n")  # Do not render empty line at the end
@@ -109,6 +102,16 @@ class Browser(HSplit):
         )
         self._source_buffer.cursor_position = new_cursor_position
 
+    def _update_statusbar(self):
+        blame = self.current_blame_line
+        statusbar_content = [
+            ("bold", "→ "),
+            ("#dede00", blame.sha[:MAX_SHA_CHARS_SHOWN]),
+            ("", " | "),
+            ("#7777ee", blame.summary),
+        ]
+        self._statusbar.text = statusbar_content
+
     @property
     def current_blame_line(self) -> BlameLine:
         return self._blame_lines[
@@ -117,9 +120,11 @@ class Browser(HSplit):
 
     def cursor_down(self):
         self._source_buffer_control.move_cursor_down()
+        self._update_statusbar()
 
     def cursor_up(self):
         self._source_buffer_control.move_cursor_up()
+        self._update_statusbar()
 
     def go_to_first_line(self):
         self._source_buffer.cursor_position = 0
