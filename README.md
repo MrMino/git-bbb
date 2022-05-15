@@ -2,6 +2,9 @@
 <p align="center">
 <img src="https://img.shields.io/pypi/v/git-bbb?style=for-the-badge" alt="PyPI"/>
 <img src="https://img.shields.io/github/license/mrmino/git-bbb?style=for-the-badge", alt="GitHub License"/>
+<a href="https://github.com/psf/black">
+    <img src="https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge" alt="Code style: black"/>
+</a>
 </p>
 
 <p align="center">
