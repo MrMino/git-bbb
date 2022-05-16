@@ -12,6 +12,10 @@
 between different revisions.
 </p>
 
+<p align="center">
+ <img src="https://user-images.githubusercontent.com/6691643/168694109-52f87447-7721-422c-a204-27fe7b8a0f47.png" alt="Git-bbb screenshot"/>
+</p>
+
 ### Features ✨
 
 The project is in its early stages of development, many features are still to
