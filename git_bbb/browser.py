@@ -29,7 +29,9 @@ if TYPE_CHECKING:
 
 
 MAX_SHA_CHARS_SHOWN = 12
+STAGING_SHA = "0" * 40
 UTF_VERTICAL_BAR = "|"
+UTF_HORIZONTAL_BAR = "—"
 UTF_LOWER_LEFT_CORNER = "└"
 UTF_RIGHT_ARROW = "➢"
 
@@ -120,9 +122,14 @@ class Browser(HSplit):
     # FIXME: this also needs to run on mouse presses
     def _update_statusbar(self):
         blame = self.current_blame_line
+        sha_indicator = (
+            blame.sha[:MAX_SHA_CHARS_SHOWN]
+            if blame.sha != STAGING_SHA
+            else "uncommitted "
+        )
         statusbar_content = [
             ("#777 bold", f"{UTF_LOWER_LEFT_CORNER} "),
-            ("#ffe100", blame.sha[:MAX_SHA_CHARS_SHOWN]),
+            ("#ffe100", sha_indicator),
             ("", f" {UTF_VERTICAL_BAR} "),
             ("#7777ee", blame.summary),
         ]
@@ -190,12 +197,24 @@ class CommitSHAMargin(Margin):
         end = min(start + self._max_height, start + height)
         current_row = winfo.ui_content.cursor_position.y
         current_sha = self.shas[current_row]
+        if current_sha == STAGING_SHA:
+            current_sha = None
 
         # TODO: mouse click on the margin should change cursor position
         margin_text: StyleAndTextTuples = [
             (
-                ("#7777ee" if self.shas[n] == current_sha else ""),
-                self.shas[n] + "\n",
+                (
+                    "#7777ee"
+                    if self.shas[n] == current_sha
+                    else "#777"
+                    if self.shas[n] == STAGING_SHA
+                    else ""
+                ),
+                (
+                    self.shas[n] + "\n"
+                    if self.shas[n] != STAGING_SHA
+                    else UTF_HORIZONTAL_BAR * self.WIDTH + "\n"
+                ),
             )
             for n in range(start, end)
         ]
