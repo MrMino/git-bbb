@@ -153,10 +153,10 @@ class CursorMargin(Margin):
     def create_margin(
         self, winfo: WindowRenderInfo, _: int, height: int
     ) -> StyleAndTextTuples:
-        screen_y_pos = winfo.ui_content.cursor_position.y
+        current_row = winfo.ui_content.cursor_position.y
         cursor: StyleAndTextTuples = [("#ffe100 bold", "➢\n")]
-        above: StyleAndTextTuples = [("", " \n")] * screen_y_pos
-        below: StyleAndTextTuples = [("#777", "│\n")] * (height - screen_y_pos)
+        above: StyleAndTextTuples = [("", " \n")] * current_row
+        below: StyleAndTextTuples = [("#777", "│\n")] * (height - current_row)
         return above + cursor + below
 
     def get_width(self, _) -> int:
@@ -194,7 +194,7 @@ class CommitSHAMargin(Margin):
     def _highlight_current_line(
         winfo: WindowRenderInfo, rows: StyleAndTextTuples
     ):
-        current_row = winfo.cursor_position.y
+        current_row = winfo.ui_content.cursor_position.y
         text = rows[current_row][1]
         rows[current_row] = ("#ffe100 bold", text)
 
