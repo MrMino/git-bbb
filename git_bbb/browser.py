@@ -31,6 +31,7 @@ if TYPE_CHECKING:
 MAX_SHA_CHARS_SHOWN = 12
 UTF_VERTICAL_BAR = "|"
 UTF_LOWER_LEFT_CORNER = "└"
+UTF_RIGHT_ARROW = "➢"
 
 
 class Statusbar(Window):
@@ -154,7 +155,7 @@ class CursorMargin(Margin):
         self, winfo: WindowRenderInfo, _: int, height: int
     ) -> StyleAndTextTuples:
         current_row = winfo.ui_content.cursor_position.y
-        cursor: StyleAndTextTuples = [("#ffe100 bold", "➢\n")]
+        cursor: StyleAndTextTuples = [("#ffe100 bold", f"{UTF_RIGHT_ARROW}\n")]
         above: StyleAndTextTuples = [("", " \n")] * current_row
         below: StyleAndTextTuples = [("#777", "│\n")] * (height - current_row)
         return above + cursor + below
