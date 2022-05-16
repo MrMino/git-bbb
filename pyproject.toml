@@ -7,6 +7,16 @@ dependencies = [
 	"prompt-toolkit",
 	"click~=8.1"
 ]
+requires-python = ">=3.7"
+license = {file = "LICENSE"}
+readme = "README.md"
+maintainers = [
+	{name = "Błażej Michalik", email = "code.mrmino@gmail.com"},
+]
+
+[project.urls]
+repository = "https://github.com/MrMino/git-bbb"
+changelog = "https://github.com/MrMino/git-bbb/blob/master/CHANGELOG.md"
 
 [project.optional-dependencies]
 test = [
