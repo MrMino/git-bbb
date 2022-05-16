@@ -157,7 +157,7 @@ class CursorMargin(Margin):
     def create_margin(
         self, winfo: WindowRenderInfo, _: int, height: int
     ) -> StyleAndTextTuples:
-        current_row = winfo.ui_content.cursor_position.y
+        current_row = winfo.cursor_position.y
         cursor: StyleAndTextTuples = [("#ffe100 bold", f"{UTF_RIGHT_ARROW}\n")]
         above: StyleAndTextTuples = [("", " \n")] * current_row
         below: StyleAndTextTuples = [("#777", "│\n")] * (height - current_row)
@@ -187,7 +187,7 @@ class CommitSHAMargin(Margin):
         start = winfo.vertical_scroll
         end = min(start + self._max_height, start + height)
         current_row = winfo.ui_content.cursor_position.y
-        current_sha = self.shas[start + current_row]
+        current_sha = self.shas[current_row]
 
         # TODO: mouse click on the margin should change cursor position
         margin_text: StyleAndTextTuples = [
@@ -205,7 +205,7 @@ class CommitSHAMargin(Margin):
     def _highlight_current_line(
         winfo: WindowRenderInfo, rows: StyleAndTextTuples
     ):
-        current_row = winfo.ui_content.cursor_position.y
+        current_row = winfo.cursor_position.y
         text = rows[current_row][1]
         rows[current_row] = ("#ffe100 bold", text)
 
