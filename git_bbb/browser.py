@@ -29,6 +29,8 @@ if TYPE_CHECKING:
 
 
 MAX_SHA_CHARS_SHOWN = 12
+UTF_VERTICAL_BAR = "|"
+UTF_RIGHT_ARROW = "→"
 
 
 class Statusbar(Window):
@@ -113,9 +115,9 @@ class Browser(HSplit):
     def _update_statusbar(self):
         blame = self.current_blame_line
         statusbar_content = [
-            ("bold", "→ "),
+            ("#777 bold", f"{URF_RIGHT_ARROW} "),
             ("#dede00", blame.sha[:MAX_SHA_CHARS_SHOWN]),
-            ("", " | "),
+            ("", f" {UTF_VERTICAL_BAR} "),
             ("#7777ee", blame.summary),
         ]
         self._statusbar.text = statusbar_content
