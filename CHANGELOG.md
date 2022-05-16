@@ -34,7 +34,7 @@ on the willingness of the author to come up with any and stick to it.
 ### Fixed
 
 * Git-bbb will show unstaged changes if `--rev` is not given.
-* Statusbar now longer extends above 1 line when browsing short files.
+* Statusbar no longer extends above 1 line when browsing short files.
 
 ### Changed
 
