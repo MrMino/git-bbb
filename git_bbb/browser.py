@@ -51,7 +51,11 @@ class Browser(HSplit):
     def __init__(self):
         self._current_sha: str = None
         self._blame_lines = []
-        self._source_buffer = Buffer(name="source", read_only=True)
+        self._source_buffer = Buffer(
+            name="source",
+            read_only=True,
+            on_cursor_position_changed=lambda _: self._update_statusbar(),
+        )
         self._source_buffer_control = BufferControl(
             self._source_buffer,
             include_default_input_processors=False,
@@ -131,11 +135,9 @@ class Browser(HSplit):
 
     def cursor_down(self):
         self._source_buffer_control.move_cursor_down()
-        self._update_statusbar()
 
     def cursor_up(self):
         self._source_buffer_control.move_cursor_up()
-        self._update_statusbar()
 
     def go_to_first_line(self):
         self._source_buffer.cursor_position = 0

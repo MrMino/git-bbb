@@ -16,6 +16,10 @@ on the willingness of the author to come up with any and stick to it.
 * Tabs will now be rendered using 4 spaces, instead of showing up as `^I`. This
   will be made configurable in the future.
 
+### Fixed
+
+* Clicking on a line will now properly update the statusbar.
+
 ## [0.0.3] - 2022-05-15
 ### Added
 
