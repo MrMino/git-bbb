@@ -121,7 +121,7 @@ class Browser(HSplit):
         blame = self.current_blame_line
         statusbar_content = [
             ("#777 bold", f"{UTF_LOWER_LEFT_CORNER} "),
-            ("#dede00", blame.sha[:MAX_SHA_CHARS_SHOWN]),
+            ("#ffe100", blame.sha[:MAX_SHA_CHARS_SHOWN]),
             ("", f" {UTF_VERTICAL_BAR} "),
             ("#7777ee", blame.summary),
         ]
