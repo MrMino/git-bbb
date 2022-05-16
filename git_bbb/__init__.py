@@ -24,7 +24,9 @@ def run(path, rev, ignore_revs_file):
     layout = Layout(browser)
     # TODO: make a class for git blame parser and keep ignore-revs path in it,
     # instead of passing it around alone.
-    key_bindings = generate_bindings(browser, undo_redo_stack, ignore_revs_file)
+    key_bindings = generate_bindings(
+        browser, undo_redo_stack, ignore_revs_file
+    )
 
     app = Application(
         full_screen=True,
