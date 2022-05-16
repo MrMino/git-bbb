@@ -147,6 +147,9 @@ class Browser(HSplit):
         self._source_buffer.cursor_position = len(self._content)
 
     def run_git_show_for_line(self):
+        # FIXME: this makes the screen filcker temporarily with the contents of
+        # the terminal as seen before running the app. It's distracting and
+        # ugly.
         run_in_terminal(lambda: git_show(self.current_blame_line.sha))
 
 
