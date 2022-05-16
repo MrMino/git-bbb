@@ -1,3 +1,6 @@
+"""
+Git-bbb: Brisk Blame Browser for Git.
+"""
 from prompt_toolkit import Application
 from prompt_toolkit.layout import Layout
 from prompt_toolkit.styles.pygments import style_from_pygments_cls
