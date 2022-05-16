@@ -10,6 +10,7 @@ on the willingness of the author to come up with any and stick to it.
 ### Added
 
 * There's now a separate margin that shows current cursor position.
+* Browser now highlights other lines from the currently indicated commit.
 
 ### Changed
 

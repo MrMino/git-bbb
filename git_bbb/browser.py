@@ -182,9 +182,16 @@ class CommitSHAMargin(Margin):
     ) -> StyleAndTextTuples:
         start = winfo.vertical_scroll
         end = min(start + self._max_height, start + height)
+        current_row = winfo.ui_content.cursor_position.y
+        current_sha = self.shas[start + current_row]
+
         # TODO: mouse click on the margin should change cursor position
         margin_text: StyleAndTextTuples = [
-            ("", self.shas[n] + "\n") for n in range(start, end)
+            (
+                ("#7777ee" if self.shas[n] == current_sha else ""),
+                self.shas[n] + "\n",
+            )
+            for n in range(start, end)
         ]
         self._highlight_current_line(winfo, margin_text)
 
