@@ -4,6 +4,7 @@ from prompt_toolkit.application import run_in_terminal
 from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.layout import Margin
 from prompt_toolkit.buffer import Buffer, Document
+from prompt_toolkit.layout.processors import TabsProcessor
 from prompt_toolkit.layout import (
     HSplit,
     Window,
@@ -52,6 +53,10 @@ class Browser(HSplit):
         self._source_buffer_control = BufferControl(
             self._source_buffer,
             include_default_input_processors=False,
+            input_processors=[
+                # TODO: make the amount of spaces for a tab configurable
+                TabsProcessor(char1=" ", char2=" "),
+            ],
         )
 
         self._sha_list_margin = CommitSHAMargin()
