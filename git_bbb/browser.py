@@ -30,7 +30,7 @@ if TYPE_CHECKING:
 
 MAX_SHA_CHARS_SHOWN = 12
 UTF_VERTICAL_BAR = "|"
-UTF_RIGHT_ARROW = "→"
+UTF_LOWER_LEFT_CORNER = "└"
 
 
 class Statusbar(Window):
@@ -68,6 +68,7 @@ class Browser(HSplit):
             [
                 Window(
                     left_margins=[
+                        CursorMargin(),
                         self._sha_list_margin,
                         PaddingMargin(1),
                         NumberedMargin(),
@@ -115,7 +116,7 @@ class Browser(HSplit):
     def _update_statusbar(self):
         blame = self.current_blame_line
         statusbar_content = [
-            ("#777 bold", f"{URF_RIGHT_ARROW} "),
+            ("#777 bold", f"{UTF_LOWER_LEFT_CORNER} "),
             ("#dede00", blame.sha[:MAX_SHA_CHARS_SHOWN]),
             ("", f" {UTF_VERTICAL_BAR} "),
             ("#7777ee", blame.summary),
@@ -144,6 +145,20 @@ class Browser(HSplit):
 
     def run_git_show_for_line(self):
         run_in_terminal(lambda: git_show(self.current_blame_line.sha))
+
+
+class CursorMargin(Margin):
+    def create_margin(
+        self, winfo: WindowRenderInfo, _: int, height: int
+    ) -> StyleAndTextTuples:
+        screen_y_pos = winfo.ui_content.cursor_position.y
+        cursor: StyleAndTextTuples = [("#ffe100 bold", "➢\n")]
+        above: StyleAndTextTuples = [("", " \n")] * screen_y_pos
+        below: StyleAndTextTuples = [("#777", "│\n")] * (height - screen_y_pos)
+        return above + cursor + below
+
+    def get_width(self, _) -> int:
+        return 2
 
 
 class CommitSHAMargin(Margin):

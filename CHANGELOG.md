@@ -7,6 +7,10 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
+### Added
+
+* There's now a separate margin that shows current cursor position.
+
 ### Changed
 
 * Tabs will now be rendered using 4 spaces, instead of showing up as `^I`. This
