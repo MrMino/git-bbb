@@ -168,6 +168,8 @@ class CursorMargin(Margin):
 
 
 class CommitSHAMargin(Margin):
+    WIDTH = MAX_SHA_CHARS_SHOWN
+
     def __init__(self):
         self._shas = []
         self._max_height = 0
@@ -210,7 +212,7 @@ class CommitSHAMargin(Margin):
         rows[current_row] = ("#ffe100 bold", text)
 
     def get_width(self, _) -> int:
-        return MAX_SHA_CHARS_SHOWN
+        return self.WIDTH
 
 
 class PaddingMargin(Margin):
