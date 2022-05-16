@@ -14,6 +14,9 @@ on the willingness of the author to come up with any and stick to it.
 
 ### Changed
 
+* Code highlighting style has been changed to
+  [Monokai](https://pygments.org/styles/). This will be configurable in the
+  future, but for now it is used as a sane default.
 * Tabs will now be rendered using 4 spaces, instead of showing up as `^I`. This
   will be made configurable in the future.
 * Uncommitted lines will no longer show up with a "000..." SHA.
