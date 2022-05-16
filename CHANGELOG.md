@@ -21,6 +21,11 @@ on the willingness of the author to come up with any and stick to it.
   will be made configurable in the future.
 * Uncommitted lines will no longer show up with a "000..." SHA.
 
+### Removed
+
+* Statusbar no longer shows the SHA of the commit - it was unnecessarily
+  duplicated.
+
 ### Fixed
 
 * Clicking on a line will now properly update the statusbar.

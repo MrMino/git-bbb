@@ -30,7 +30,6 @@ if TYPE_CHECKING:
 
 MAX_SHA_CHARS_SHOWN = 12
 STAGING_SHA = "0" * 40
-UTF_VERTICAL_BAR = "|"
 UTF_HORIZONTAL_BAR = "—"
 UTF_LOWER_LEFT_CORNER = "└"
 UTF_RIGHT_ARROW = "➢"
@@ -122,16 +121,13 @@ class Browser(HSplit):
     # FIXME: this also needs to run on mouse presses
     def _update_statusbar(self):
         blame = self.current_blame_line
-        sha_indicator = (
-            blame.sha[:MAX_SHA_CHARS_SHOWN]
-            if blame.sha != STAGING_SHA
-            else "uncommitted "
-        )
+        if blame.sha != STAGING_SHA:
+            summary = blame.summary
+        else:
+            summary = "(Uncommitted) " + blame.summary
         statusbar_content = [
             ("#777 bold", f"{UTF_LOWER_LEFT_CORNER} "),
-            ("#ffe100", sha_indicator),
-            ("", f" {UTF_VERTICAL_BAR} "),
-            ("#7777ee", blame.summary),
+            ("#ffe100", summary),
         ]
         self._statusbar.text = statusbar_content
 
