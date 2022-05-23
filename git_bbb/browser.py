@@ -57,6 +57,7 @@ class Browser(HSplit):
     def __init__(self):
         self._current_sha: str = None
         self._blame_lines = []
+        self._shas = []
         self._source_buffer = Buffer(
             name="source",
             read_only=True,
@@ -100,6 +101,7 @@ class Browser(HSplit):
     ):
         self._current_sha = current_sha
         self._blame_lines = blame_lines
+        self._shas = [b.sha for b in self._blame_lines]
 
         output = "".join([b.content for b in self._blame_lines])
         output = output.rstrip("\n")  # Do not render empty line at the end
@@ -107,9 +109,8 @@ class Browser(HSplit):
 
         self._source_buffer_control.lexer = lexer
 
-        shas = [b.sha for b in self._blame_lines]
-        self._sha_list_margin.shas = shas
-        self._cursor_margin.shas = shas
+        self._sha_list_margin.shas = self._shas
+        self._cursor_margin.shas = self._shas
 
         # XXX: Do not save Documents - they are immutable and as soon as cursor
         # position changes, the actual document in the buffer is changed to a
