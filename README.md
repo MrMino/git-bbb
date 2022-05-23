@@ -13,7 +13,7 @@ between different revisions.
 </p>
 
 <p align="center">
- <img src="https://user-images.githubusercontent.com/6691643/168694109-52f87447-7721-422c-a204-27fe7b8a0f47.png" alt="Git-bbb screenshot"/>
+ <img src="https://user-images.githubusercontent.com/6691643/169922563-053608fc-c169-43b6-a55a-1bb5d6a1b8c4.png" alt="Git-bbb screenshot"/>
 </p>
 
 ### Features ✨
