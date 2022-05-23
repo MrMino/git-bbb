@@ -142,6 +142,15 @@ def git_show_toplevel():
     return Path(subprocess.check_output(cmd).decode("utf-8").strip())
 
 
+def git_rev_parse_head() -> str:
+    """Get current commit SHA.
+
+    Can be used to get rid of unstaged changes.
+    """
+    cmd = ["git", "rev-parse", "HEAD"]
+    return subprocess.check_output(cmd).decode("utf-8").strip()
+
+
 DEFAULT_IGNORE_REVS_PATH = Path(".git-ignore-revs")
 
 

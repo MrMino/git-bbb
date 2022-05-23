@@ -17,6 +17,7 @@ from .git_plumbing import (
     git_show,
     git_blame,
     git_show_toplevel,
+    git_rev_parse_head,
     parse_git_blame_output,
     STAGING_SHA,
 )
@@ -377,6 +378,9 @@ repo_path = git_show_toplevel()
 
 
 def browse_blame_briskly(browser, ignore_revs_file, rev, path, current_line=1):
+    if rev == STAGING_SHA:
+        # Get rid of unstaged changes.
+        rev = git_rev_parse_head()
     if not path.is_absolute():
         path = (repo_path / path).resolve()
     blame_output = git_blame(path, rev, ignore_revs_file)

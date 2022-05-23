@@ -16,6 +16,8 @@ on the willingness of the author to come up with any and stick to it.
     * <kbd>[</kbd> - previous,
 * Vi-style moves using numbers before navigation keys is now supported for
   moving cursor up & down.
+* Attempting to warp onto a line with unstaged changes will warp onto current
+  `HEAD`.
 
 ### Changed
 
@@ -27,6 +29,7 @@ on the willingness of the author to come up with any and stick to it.
 * Fixed issues with running `git-bbb` from a directory other than repository
   root.
 * Warping on a line near the end of the file will no longer raise `IndexError`.
+* Warping on a line with unstaged changes no longer raises an exception.
 
 ## [0.0.4] - 2022-05-17
 
