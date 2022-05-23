@@ -32,6 +32,9 @@ if TYPE_CHECKING:
 MAX_SHA_CHARS_SHOWN = 12
 STAGING_SHA = "0" * 40
 UTF_HORIZONTAL_BAR = "—"
+UTF_UPPER_LEFT_CORNER = "┌"
+UTF_VERTICAL_BAR = "│"
+UTF_VERTICAL_T_R = "├"
 UTF_LOWER_LEFT_CORNER = "└"
 UTF_RIGHT_ARROW = "➢"
 
@@ -69,13 +72,14 @@ class Browser(HSplit):
         )
 
         self._sha_list_margin = CommitSHAMargin()
+        self._cursor_margin = CursorMargin()
 
         self._statusbar = Statusbar("", style="bg:#333")
         super().__init__(
             [
                 Window(
                     left_margins=[
-                        CursorMargin(),
+                        self._cursor_margin,
                         self._sha_list_margin,
                         PaddingMargin(1),
                         NumberedMargin(),
@@ -102,7 +106,11 @@ class Browser(HSplit):
         self._content = output
 
         self._source_buffer_control.lexer = lexer
-        self._sha_list_margin.shas = [b.sha for b in self._blame_lines]
+
+        shas = [b.sha for b in self._blame_lines]
+        self._sha_list_margin.shas = shas
+        self._cursor_margin.shas = shas
+
         # XXX: Do not save Documents - they are immutable and as soon as cursor
         # position changes, the actual document in the buffer is changed to a
         # different one.
@@ -130,7 +138,6 @@ class Browser(HSplit):
         else:
             summary = "(Uncommitted) " + blame.summary
         statusbar_content = [
-            ("#777 bold", f"{UTF_LOWER_LEFT_CORNER} "),
             ("#ffe100", summary),
         ]
         self._statusbar.text = statusbar_content
@@ -161,14 +168,69 @@ class Browser(HSplit):
 
 
 class CursorMargin(Margin):
+    CURSOR = ("#ffe100 bold", f"{UTF_RIGHT_ARROW}\n")
+    PIPE_STYLE = "bold #7777ee"
+
+    def __init__(self):
+        self._shas = []
+        self._max_height = 0
+
+    @property
+    def shas(self):
+        return self._shas
+
+    @shas.setter
+    def shas(self, shas: List[str]):
+        self._shas = shas
+        self._max_height = len(shas)
+
     def create_margin(
         self, winfo: WindowRenderInfo, _: int, height: int
     ) -> StyleAndTextTuples:
-        current_row = winfo.cursor_position.y
-        cursor: StyleAndTextTuples = [("#ffe100 bold", f"{UTF_RIGHT_ARROW}\n")]
-        above: StyleAndTextTuples = [("", " \n")] * current_row
-        below: StyleAndTextTuples = [("#777", "│\n")] * (height - current_row)
-        return above + cursor + below
+        lines_above = winfo.cursor_position.y
+        lines_below = height - lines_above - 1
+        current_line = lines_above
+
+        current_row = winfo.ui_content.cursor_position.y
+        current_sha = self.shas[current_row]
+        pipes = self.render_pipes(current_sha)
+        margin = pipes[
+            current_row - lines_above : current_row + lines_below + 1
+        ]
+        margin[current_line] = self.CURSOR
+        return margin
+
+    def render_pipes(self, cursor_sha: str) -> StyleAndTextTuples:
+        """Render a pipeline that shows where current sha is in the file."""
+        row_has_current_sha = [cursor_sha == sha for sha in self.shas]
+        first_row_with_same_sha = row_has_current_sha.index(True)
+        last_row_with_same_sha = (
+            len(self.shas) - row_has_current_sha[::-1].index(True) - 1
+        )
+
+        pipes: StyleAndTextTuples
+
+        # Empty characters before the first SHA
+        pipes = [("", "\n")] * first_row_with_same_sha
+
+        # + and | pipes
+        for is_current in row_has_current_sha[
+            first_row_with_same_sha : last_row_with_same_sha + 1
+        ]:
+            pipe_char = UTF_VERTICAL_T_R if is_current else UTF_VERTICAL_BAR
+            pipes.append((self.PIPE_STYLE, pipe_char + "\n"))
+
+        # Corners for the first and last sha
+        pipes[first_row_with_same_sha] = (
+            self.PIPE_STYLE,
+            UTF_UPPER_LEFT_CORNER + "\n",
+        )
+        pipes[last_row_with_same_sha] = (
+            self.PIPE_STYLE,
+            UTF_LOWER_LEFT_CORNER + "\n",
+        )
+
+        return pipes
 
     def get_width(self, _) -> int:
         return 2

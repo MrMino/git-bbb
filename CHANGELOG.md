@@ -7,6 +7,11 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
+### Changed
+
+* The leftmost margin now draws lines towards other places where current sha
+  is, instead of hinting down at the statusbar.
+
 ### Fixed
 
 * Fixed issues with running `git-bbb` from a directory other than repository
