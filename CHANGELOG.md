@@ -14,6 +14,8 @@ on the willingness of the author to come up with any and stick to it.
     * <kbd>}</kbd> - last,
     * <kbd>]</kbd> - next,
     * <kbd>[</kbd> - previous,
+* Vi-style moves using numbers before navigation keys is now supported for
+  moving cursor up & down.
 
 ### Changed
 

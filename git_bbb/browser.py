@@ -161,11 +161,13 @@ class Browser(HSplit):
         )
         self._source_buffer.cursor_position = new_cursor_position
 
-    def cursor_down(self):
-        self._source_buffer_control.move_cursor_down()
+    def cursor_down(self, count=1):
+        for _ in range(count):
+            self._source_buffer_control.move_cursor_down()
 
-    def cursor_up(self):
-        self._source_buffer_control.move_cursor_up()
+    def cursor_up(self, count=1):
+        for _ in range(count):
+            self._source_buffer_control.move_cursor_up()
 
     def go_to_first_line(self):
         self._source_buffer.cursor_position = 0

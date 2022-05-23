@@ -40,12 +40,12 @@ def generate_bindings(
     @kb.add("j")
     @kb.add("down")
     def scroll_down(event):
-        browser.cursor_down()
+        browser.cursor_down(count=event.arg)
 
     @kb.add("k")
     @kb.add("up")
     def scroll_up(event):
-        browser.cursor_up()
+        browser.cursor_up(count=event.arg)
 
     @kb.add("g", "g")
     @kb.add("<")
@@ -64,6 +64,7 @@ def generate_bindings(
         ipdb.set_trace()
         browser  # Needs to be here so that we can access it in the debugger
 
+    # TODO: Vi-style n-times moving
     kb.add("J")(scroll_one_line_down)
     kb.add("s-down")(scroll_one_line_down)
     kb.add("K")(scroll_one_line_up)
@@ -95,10 +96,12 @@ def generate_bindings(
 
     @kb.add("]")
     def next_line_of_this_sha(event):
+        # TODO: Vi-style n-times moving
         browser.go_to_next_line_of_current_sha()
 
     @kb.add("[")
     def previous_line_of_this_sha(event):
+        # TODO: Vi-style n-times moving
         browser.go_to_previous_line_of_current_sha()
 
     @kb.add("}")
