@@ -93,4 +93,20 @@ def generate_bindings(
     def use_git_show(event):
         browser.run_git_show_for_line()
 
+    @kb.add("]")
+    def next_line_of_this_sha(event):
+        browser.go_to_next_line_of_current_sha()
+
+    @kb.add("[")
+    def previous_line_of_this_sha(event):
+        browser.go_to_previous_line_of_current_sha()
+
+    @kb.add("}")
+    def first_line_of_this_sha(event):
+        browser.go_to_last_line_of_current_sha()
+
+    @kb.add("{")
+    def last_line_of_this_sha(event):
+        browser.go_to_first_line_of_current_sha()
+
     return kb

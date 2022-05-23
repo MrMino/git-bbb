@@ -143,6 +143,10 @@ class Browser(HSplit):
         return self._blame_lines[self.current_line]
 
     @property
+    def cursor_sha(self):
+        return self._shas[self.current_line]
+
+    @property
     def current_line(self) -> int:
         """Line index the current document, for the line the cursor is on."""
         return self._source_buffer.document.cursor_position_row
@@ -174,6 +178,54 @@ class Browser(HSplit):
         # the terminal as seen before running the app. It's distracting and
         # ugly.
         run_in_terminal(lambda: git_show(self.current_blame_line.sha))
+
+    def go_to_next_line_of_current_sha(self, wrap=True):
+        try:
+            move_to = self._shas.index(self.cursor_sha, self.current_line + 1)
+        except ValueError:
+            move_to = None
+
+        if move_to is None and wrap:
+            try:
+                self.go_to_first_line_of_current_sha()
+            except ValueError:
+                pass
+
+        if move_to is None:
+            move_to = self.current_line
+
+        self.current_line = move_to
+
+    def go_to_previous_line_of_current_sha(self, wrap=True):
+        try:
+            move_to = (
+                len(self._shas)
+                - self._shas[::-1].index(
+                    self.cursor_sha, (len(self._shas) - self.current_line)
+                )
+                - 1
+            )
+        except ValueError:
+            move_to = None
+
+        if move_to is None and wrap:
+            try:
+                self.go_to_last_line_of_current_sha()
+            except ValueError:
+                pass
+
+        if move_to is None:
+            move_to = self.current_line
+
+        self.current_line = move_to
+
+    def go_to_first_line_of_current_sha(self):
+        self.current_line = self._shas.index(self.cursor_sha)
+
+    def go_to_last_line_of_current_sha(self):
+        self.current_line = (
+            len(self._shas) - self._shas[::-1].index(self.cursor_sha) - 1
+        )
 
 
 class CursorMargin(Margin):

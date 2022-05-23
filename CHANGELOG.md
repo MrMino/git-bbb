@@ -7,6 +7,14 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
+### Added
+
+* Added the keybindings for traveling between lines of the SHA under cursor:
+    * <kbd>{</kbd> - first,
+    * <kbd>}</kbd> - last,
+    * <kbd>]</kbd> - next,
+    * <kbd>[</kbd> - previous,
+
 ### Changed
 
 * The leftmost margin now draws lines towards other places where current sha
