@@ -60,6 +60,7 @@ def generate_bindings(
     @kb.add("D", "B", "G", filter=Condition(lambda: "DEBUG" in os.environ))
     def set_trace(event):
         import ipdb  # type: ignore
+
         ipdb.set_trace()
         browser  # Needs to be here so that we can access it in the debugger
 
