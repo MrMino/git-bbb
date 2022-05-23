@@ -97,7 +97,7 @@ class Browser(HSplit):
         current_sha: str,
         blame_lines: List[BlameLine],
         lexer: PygmentsLexer,
-        current_line: int,
+        current_line_index: int,
     ):
         self._current_sha = current_sha
         self._blame_lines = blame_lines
@@ -118,13 +118,8 @@ class Browser(HSplit):
         source_document = Document(output, cursor_position=0)
         self._source_buffer.set_document(source_document, bypass_readonly=True)
 
-        new_cursor_position = source_document.translate_row_col_to_index(
-            # Cursor row position is counted from 0, while line numbers are
-            # counted from 1, hence the -1 below.
-            current_line - 1,
-            0,
-        )
-        self._source_buffer.cursor_position = new_cursor_position
+        # Line indexes are counted from 0, line numbers - from 1.
+        self.current_line = current_line_index - 1
 
         # XXX: statusbar has to be updated _after_ updating the cursor
         # position, otherwise the row might be too high for
@@ -145,9 +140,22 @@ class Browser(HSplit):
 
     @property
     def current_blame_line(self) -> BlameLine:
-        return self._blame_lines[
-            self._source_buffer.document.cursor_position_row
-        ]
+        return self._blame_lines[self.current_line]
+
+    @property
+    def current_line(self) -> int:
+        """Line index the current document, for the line the cursor is on."""
+        return self._source_buffer.document.cursor_position_row
+
+    @current_line.setter
+    def current_line(self, row):
+        new_cursor_position = (
+            self._source_buffer.document.translate_row_col_to_index(
+                row,
+                0,
+            )
+        )
+        self._source_buffer.cursor_position = new_cursor_position
 
     def cursor_down(self):
         self._source_buffer_control.move_cursor_down()
