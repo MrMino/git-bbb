@@ -7,6 +7,8 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
+## [0.0.5] - 2022-05-24
+
 ### Added
 
 * Added the keybindings for traveling between lines of the SHA under cursor:
@@ -86,6 +88,7 @@ This is the first version of `git-bbb`, with the most basic functionality
 covered. The project has been in the works for a month now, many things are
 still to be added.
 
+[0.0.4]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.5
 [0.0.4]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.4
 [0.0.3]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.3
 [0.0.2]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.2
