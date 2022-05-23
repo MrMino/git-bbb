@@ -168,6 +168,7 @@ class Browser(HSplit):
 
 
 class CursorMargin(Margin):
+    WIDTH = 2
     CURSOR = ("#ffe100 bold", f"{UTF_RIGHT_ARROW}\n")
     PIPE_STYLE = "bold #7777ee"
 
@@ -233,7 +234,7 @@ class CursorMargin(Margin):
         return pipes
 
     def get_width(self, _) -> int:
-        return 2
+        return self.WIDTH
 
 
 class CommitSHAMargin(Margin):
