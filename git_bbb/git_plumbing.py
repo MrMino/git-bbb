@@ -22,11 +22,11 @@ class BlameLine:
     is_boundary: bool
 
     previous_sha: Optional[str]
-    previous_filename: Optional[str]
+    previous_filename: Optional[Path]
 
     repeats: Optional[int]
 
-    original_filename: str
+    original_filename: Path
     original_line_number: int
     final_line_number: int
 
@@ -55,6 +55,10 @@ class BlameLine:
         fields["final_line_number"] = int(fields["final_line_number"])
         fields["author_time"] = int(fields["author_time"])
         fields["committer_time"] = int(fields["committer_time"])
+
+        fields["original_filename"] = Path(fields["original_filename"])
+        if fields["previous_filename"] is not None:
+            fields["previous_filename"] = Path(fields["previous_filename"])
 
         return BlameLine(**fields)
 
@@ -127,6 +131,12 @@ def parse_git_blame_output(blame_output: str) -> List[BlameLine]:
     ]
 
     return blames
+
+
+def git_show_toplevel():
+    """Get absolute path to the repository we're in currently."""
+    cmd = ["git", "rev-parse", "--show-toplevel"]
+    return Path(subprocess.check_output(cmd).decode("utf-8").strip())
 
 
 DEFAULT_IGNORE_REVS_PATH = Path(".git-ignore-revs")

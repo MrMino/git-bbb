@@ -16,6 +16,7 @@ from prompt_toolkit.layout import (
 from .git_plumbing import (
     git_show,
     git_blame,
+    git_show_toplevel,
     parse_git_blame_output,
 )
 
@@ -243,7 +244,12 @@ class PaddingMargin(Margin):
         return self.width
 
 
+repo_path = git_show_toplevel()
+
+
 def browse_blame_briskly(browser, ignore_revs_file, rev, path, current_line=1):
+    if not path.is_absolute():
+        path = (repo_path / path).resolve()
     blame_output = git_blame(path, rev, ignore_revs_file)
     blames = parse_git_blame_output(blame_output)
     pygments_lexer = PygmentsLexer.from_filename(path)

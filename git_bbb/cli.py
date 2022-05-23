@@ -44,6 +44,7 @@ from . import run
         readable=True,
         dir_okay=False,
         path_type=pathlib.Path,
+        resolve_path=True,
     ),
 )
 def git_bbb(path, rev, ignore_revs_file):

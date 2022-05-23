@@ -7,6 +7,11 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
+### Fixed
+
+* Fixed issues with running `git-bbb` from a directory other than repository
+  root.
+
 ## [0.0.4] - 2022-05-17
 
 ### Added
