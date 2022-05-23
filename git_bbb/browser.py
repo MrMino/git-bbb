@@ -97,8 +97,6 @@ class Browser(HSplit):
         self._current_sha = current_sha
         self._blame_lines = blame_lines
 
-        self._update_statusbar()
-
         output = "".join([b.content for b in self._blame_lines])
         output = output.rstrip("\n")  # Do not render empty line at the end
         self._content = output
@@ -118,6 +116,11 @@ class Browser(HSplit):
             0,
         )
         self._source_buffer.cursor_position = new_cursor_position
+
+        # XXX: statusbar has to be updated _after_ updating the cursor
+        # position, otherwise the row might be too high for
+        # self.current_blame_line, which will lead to an IndexError.
+        self._update_statusbar()
 
     # FIXME: this also needs to run on mouse presses
     def _update_statusbar(self):

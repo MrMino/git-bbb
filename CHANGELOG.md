@@ -11,6 +11,7 @@ on the willingness of the author to come up with any and stick to it.
 
 * Fixed issues with running `git-bbb` from a directory other than repository
   root.
+* Warping on a line near the end of the file will no longer raise `IndexError`.
 
 ## [0.0.4] - 2022-05-17
 
