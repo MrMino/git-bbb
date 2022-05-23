@@ -13,6 +13,9 @@ from pathlib import Path
 import git
 
 
+STAGING_SHA = "0" * 40
+
+
 @dataclass
 class BlameLine:
     content: str

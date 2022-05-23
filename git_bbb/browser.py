@@ -18,6 +18,7 @@ from .git_plumbing import (
     git_blame,
     git_show_toplevel,
     parse_git_blame_output,
+    STAGING_SHA,
 )
 
 
@@ -30,7 +31,6 @@ if TYPE_CHECKING:
 
 
 MAX_SHA_CHARS_SHOWN = 12
-STAGING_SHA = "0" * 40
 UTF_HORIZONTAL_BAR = "—"
 UTF_UPPER_LEFT_CORNER = "┌"
 UTF_VERTICAL_BAR = "│"
