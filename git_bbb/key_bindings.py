@@ -8,6 +8,7 @@ from prompt_toolkit.key_binding.bindings.scroll import (
     scroll_one_line_up,
 )
 from prompt_toolkit.filters import Condition
+from prompt_toolkit.utils import suspend_to_background_supported
 
 from .browser import browse_blame_briskly
 from .undo_redo import RevBrowseInfo
@@ -19,6 +20,10 @@ def generate_bindings(
     kb = KeyBindings()
 
     # TODO: reset
+
+    @kb.add("c-z", filter=Condition(suspend_to_background_supported))
+    def suspend_to_background(event):
+        event.app.suspend_to_background()
 
     @kb.add("enter")
     def warp(event):

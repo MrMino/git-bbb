@@ -7,6 +7,10 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
+### Added
+
+* It is now possible to suspend `git-bbb` using <kbd>ctrl</kbd>+<kbd>z</kbd>
+
 ### Fixed
 
 * `git-bbb` will now properly parse timezones west of Greenwich.
