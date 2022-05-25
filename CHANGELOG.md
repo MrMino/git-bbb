@@ -7,6 +7,10 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
+### Fixed
+
+* `git-bbb` will now properly parse timezones west of Greenwich.
+
 ## [0.0.5] - 2022-05-24
 
 ### Added
