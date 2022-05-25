@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project **DOES NOT** adhere to Semantic Versioning. Versioning is based
 on the willingness of the author to come up with any and stick to it. 
 
-## [Unreleased]
+## [0.0.6] - 2022-05-25
 
 ### Added
 
@@ -96,6 +96,7 @@ This is the first version of `git-bbb`, with the most basic functionality
 covered. The project has been in the works for a month now, many things are
 still to be added.
 
+[0.0.6]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.6
 [0.0.5]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.5
 [0.0.4]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.4
 [0.0.3]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.3
