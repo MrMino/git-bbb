@@ -156,6 +156,9 @@ DEFAULT_IGNORE_REVS_PATH = Path(".git-ignore-revs")
 
 def default_ignore_revs() -> Optional[str]:
     """Check if default ignore-revs file is available, return its path if so."""
+    # TODO: either use git_show_toplevel here and remove dependency on
+    # gitpython, or reuse repo.working_tree_dir where git_show_toplevel is
+    # used.
     repo = git.Repo(search_parent_directories=True)
     worktree_path = repo.working_tree_dir
 
