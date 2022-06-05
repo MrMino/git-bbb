@@ -56,6 +56,7 @@ class Statusbar(Window):
 
 class Browser(HSplit):
     def __init__(self):
+        self._content = None
         self._current_sha: str = None
         self._blame_lines = []
         self._shas = []
