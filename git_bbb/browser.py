@@ -25,7 +25,7 @@ from .git_plumbing import (
 )
 
 
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, Optional
 
 if TYPE_CHECKING:
     from prompt_toolkit.layout import WindowRenderInfo
@@ -147,7 +147,10 @@ class Browser(HSplit):
     # FIXME: this also needs to run on mouse presses
     def _update_statusbar(self):
         blame = self.current_blame_line
-        if blame.sha != STAGING_SHA:
+        if blame is None:
+            # File is empty for current revision
+            summary = "(empty file)"
+        elif blame.sha != STAGING_SHA:
             summary = blame.summary
         else:
             summary = "(Uncommitted) " + blame.summary
@@ -157,8 +160,11 @@ class Browser(HSplit):
         self._statusbar.text = statusbar_content
 
     @property
-    def current_blame_line(self) -> BlameLine:
-        return self._blame_lines[self.current_line]
+    def current_blame_line(self) -> Optional[BlameLine]:
+        if self.empty_file:
+            return None
+        else:
+            return self._blame_lines[self.current_line]
 
     @property
     def cursor_sha(self):
