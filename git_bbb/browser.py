@@ -3,6 +3,7 @@ from __future__ import annotations
 from prompt_toolkit.application import run_in_terminal
 from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.buffer import Buffer, Document
+from prompt_toolkit.filters import Condition
 from prompt_toolkit.layout.processors import TabsProcessor
 from prompt_toolkit.layout import (
     HSplit,
@@ -11,6 +12,7 @@ from prompt_toolkit.layout import (
     FormattedTextControl,
     Margin,
     NumberedMargin,
+    ConditionalMargin,
 )
 
 from .git_plumbing import (
@@ -77,15 +79,24 @@ class Browser(HSplit):
         self._sha_list_margin = CommitSHAMargin()
         self._cursor_margin = CursorMargin()
 
+        not_browsing_empty_file = Condition(lambda: not self.empty_file)
         self._statusbar = Statusbar("", style="bg:#333")
         super().__init__(
             [
                 Window(
                     left_margins=[
-                        self._cursor_margin,
-                        self._sha_list_margin,
+                        ConditionalMargin(
+                            self._cursor_margin,
+                            filter=not_browsing_empty_file,
+                        ),
+                        ConditionalMargin(
+                            self._sha_list_margin, not_browsing_empty_file
+                        ),
                         PaddingMargin(1),
-                        NumberedMargin(),
+                        ConditionalMargin(
+                            NumberedMargin(),
+                            filter=not_browsing_empty_file,
+                        ),
                     ],
                     content=self._source_buffer_control,
                     always_hide_cursor=True,
@@ -93,6 +104,11 @@ class Browser(HSplit):
                 self._statusbar,
             ]
         )
+
+    @property
+    def empty_file(self) -> bool:
+        """True if the file we are browsing is empty in current revision."""
+        return not bool(self._blame_lines)
 
     def browse_blame(
         self,
