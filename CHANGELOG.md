@@ -7,6 +7,11 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
+### Added
+
+* When browsing a file that is empty in the given revision, a placeholder text
+  containing currently opened revision will show up.
+
 ### Fixed
 
 * Browsing a file that is empty for the given revision will no longer lead to

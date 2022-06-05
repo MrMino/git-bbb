@@ -12,7 +12,10 @@ from prompt_toolkit.layout import (
     FormattedTextControl,
     Margin,
     NumberedMargin,
+    FloatContainer,
+    Float,
     ConditionalMargin,
+    ConditionalContainer,
 )
 
 from .git_plumbing import (
@@ -79,31 +82,49 @@ class Browser(HSplit):
         self._sha_list_margin = CommitSHAMargin()
         self._cursor_margin = CursorMargin()
 
+        browsing_empty_file = Condition(lambda: self.empty_file)
         not_browsing_empty_file = Condition(lambda: not self.empty_file)
+
+        self._empty_file_float = Float(
+            ConditionalContainer(
+                Window(FormattedTextControl(self._empty_file_text)),
+                filter=browsing_empty_file,
+            ),
+        )
+
         self._statusbar = Statusbar("", style="bg:#333")
         super().__init__(
             [
-                Window(
-                    left_margins=[
-                        ConditionalMargin(
-                            self._cursor_margin,
-                            filter=not_browsing_empty_file,
-                        ),
-                        ConditionalMargin(
-                            self._sha_list_margin, not_browsing_empty_file
-                        ),
-                        PaddingMargin(1),
-                        ConditionalMargin(
-                            NumberedMargin(),
-                            filter=not_browsing_empty_file,
-                        ),
-                    ],
-                    content=self._source_buffer_control,
-                    always_hide_cursor=True,
+                FloatContainer(
+                    content=Window(
+                        left_margins=[
+                            ConditionalMargin(
+                                self._cursor_margin,
+                                filter=not_browsing_empty_file,
+                            ),
+                            ConditionalMargin(
+                                self._sha_list_margin, not_browsing_empty_file
+                            ),
+                            PaddingMargin(1),
+                            ConditionalMargin(
+                                NumberedMargin(),
+                                filter=not_browsing_empty_file,
+                            ),
+                        ],
+                        content=self._source_buffer_control,
+                        always_hide_cursor=True,
+                    ),
+                    floats=[self._empty_file_float],
                 ),
                 self._statusbar,
             ]
         )
+
+    def _empty_file_text(self):
+        revision = (
+            self._current_sha if self._current_sha is not None else "HEAD"
+        )
+        return f"File is empty in this revision ({revision})."
 
     @property
     def empty_file(self) -> bool:
