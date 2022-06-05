@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from prompt_toolkit.application import run_in_terminal
 from prompt_toolkit.lexers import PygmentsLexer
-from prompt_toolkit.layout import Margin
 from prompt_toolkit.buffer import Buffer, Document
 from prompt_toolkit.layout.processors import TabsProcessor
 from prompt_toolkit.layout import (
@@ -10,6 +9,7 @@ from prompt_toolkit.layout import (
     Window,
     BufferControl,
     FormattedTextControl,
+    Margin,
     NumberedMargin,
 )
 
