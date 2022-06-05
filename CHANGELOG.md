@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project **DOES NOT** adhere to Semantic Versioning. Versioning is based
 on the willingness of the author to come up with any and stick to it. 
 
+## [Unreleased]
+
+### Fixed
+
+* Browsing a file that is empty for the given revision will no longer lead to
+  an `IndexError`.
+
 ## [0.0.6] - 2022-05-25
 
 ### Added
