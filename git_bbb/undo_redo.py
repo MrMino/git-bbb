@@ -29,7 +29,6 @@ class RevStack:
     def redo(self) -> Optional[RevBrowseInfo]:
         """Return previously undone rev, or None if there's nothing to redo."""
         assert self.stack
-
         if self.stack_pointer != len(self.stack) - 1:
             self.stack_pointer += 1
         else:
