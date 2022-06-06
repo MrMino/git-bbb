@@ -9,6 +9,9 @@ on the willingness of the author to come up with any and stick to it.
 
 ### Added
 
+* Search! <kbd>/</kbd> and <kbd>?</kbd> will now trigger a vi-style searchbar
+  that searches through the blame lines. <kbd>N</kbd> and <kbd>n</kbd> can be
+  used to cycle through results.
 * When browsing a file that is empty in the given revision, a placeholder text
   containing currently opened revision will show up.
 

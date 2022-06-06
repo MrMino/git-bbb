@@ -17,6 +17,7 @@ from prompt_toolkit.layout import (
     ConditionalMargin,
     ConditionalContainer,
 )
+from prompt_toolkit.widgets import SearchToolbar
 
 from .git_plumbing import STAGING_SHA, Git
 from .undo_redo import RevStack, RevBrowseInfo
@@ -62,6 +63,12 @@ class Browser(HSplit):
         self._current_sha: Optional[str] = None
         self._blame_lines: List[BlameLine] = []
         self._shas: List[str] = []
+
+        self._search_buffer = Buffer(multiline=False)
+        self._search_toolbar = SearchToolbar(
+            self._search_buffer,
+            vi_mode=True,
+        )
         self._source_buffer = Buffer(
             name="source",
             read_only=True,
@@ -74,6 +81,7 @@ class Browser(HSplit):
                 # TODO: make the amount of spaces for a tab configurable
                 TabsProcessor(char1=" ", char2=" "),
             ],
+            search_buffer_control=self._search_toolbar.control,
             key_bindings=generate_bindings(self),
         )
 
@@ -115,6 +123,7 @@ class Browser(HSplit):
                     floats=[self._empty_file_float],
                 ),
                 self._statusbar,
+                self._search_toolbar,
             ]
         )
 
