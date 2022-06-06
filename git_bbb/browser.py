@@ -20,6 +20,7 @@ from prompt_toolkit.layout import (
 
 from .git_plumbing import STAGING_SHA, Git
 from .undo_redo import RevStack, RevBrowseInfo
+from .key_bindings import generate_bindings
 
 from typing import TYPE_CHECKING, List, Optional
 
@@ -73,6 +74,7 @@ class Browser(HSplit):
                 # TODO: make the amount of spaces for a tab configurable
                 TabsProcessor(char1=" ", char2=" "),
             ],
+            key_bindings=generate_bindings(self),
         )
 
         self._sha_list_margin = CommitSHAMargin()

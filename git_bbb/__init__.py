@@ -9,7 +9,6 @@ from pygments.styles import get_style_by_name
 
 from .git_plumbing import Git
 from .browser import Browser
-from .key_bindings import generate_bindings
 
 import logging
 
@@ -23,14 +22,12 @@ def run(path, rev, ignore_revs_file):
     browser.browse_blame(rev, path, line_no=1)
 
     layout = Layout(browser)
-    key_bindings = generate_bindings(browser)
 
     # TODO: make this configurable
     pygments_style = "monokai"
     app = Application(
         full_screen=True,
         layout=layout,
-        key_bindings=key_bindings,
         mouse_support=True,
         style=style_from_pygments_cls(get_style_by_name(pygments_style)),
     )
