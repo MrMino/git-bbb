@@ -12,9 +12,9 @@ RevBrowseInfo = namedtuple("RevBrowseInfo", ["rev", "file_path", "lineno"])
 class RevStack:
     """Undo/redo stack for revs."""
 
-    def __init__(self, starting_rev: RevBrowseInfo):
-        self.stack = [starting_rev]
-        self.stack_pointer = 0
+    def __init__(self):
+        self.stack = []
+        self.stack_pointer = -1
 
     def undo(self) -> Optional[RevBrowseInfo]:
         """Return previous rev, or None if current rev is the starting one."""
@@ -37,13 +37,15 @@ class RevStack:
         return self.stack[self.stack_pointer]
 
     @property
-    def current(self):
-        return self.stack[self.stack_pointer]
+    def current(self) -> Optional[RevBrowseInfo]:
+        return self.stack[self.stack_pointer] if self.stack else None
 
     def do(self, rev_info: RevBrowseInfo):
         """Add rev to the stack after current position, remove undone revs."""
         # Skip if we haven't changed revs
-        if rev_info.rev == self.current.rev:
+        if (
+            current_info := self.current
+        ) is not None and rev_info.rev == current_info.rev:
             return
 
         self.stack_pointer += 1

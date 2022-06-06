@@ -10,10 +10,8 @@ from prompt_toolkit.key_binding.bindings.scroll import (
 from prompt_toolkit.filters import Condition
 from prompt_toolkit.utils import suspend_to_background_supported
 
-from .undo_redo import RevBrowseInfo
 
-
-def generate_bindings(browser, undo_redo_stack) -> KeyBindings:
+def generate_bindings(browser) -> KeyBindings:
     kb = KeyBindings()
 
     # TODO: reset
@@ -29,8 +27,6 @@ def generate_bindings(browser, undo_redo_stack) -> KeyBindings:
         new_file_path = blame.original_filename
         new_rev = blame.sha
         new_lineno = blame.original_line_number
-        rev_info = RevBrowseInfo(new_rev, new_file_path, new_lineno)
-        undo_redo_stack.do(rev_info)
         browser.browse_blame(new_rev, new_file_path, new_lineno)
 
     @kb.add("q", eager=True)
@@ -74,21 +70,11 @@ def generate_bindings(browser, undo_redo_stack) -> KeyBindings:
 
     @kb.add("u")
     def undo(event):
-        rev_info = undo_redo_stack.undo()
-        if rev_info is None:
-            return
-
-        rev, file_path, lineno = rev_info
-        browser.browse_blame(rev, file_path, lineno)
+        browser.undo()
 
     @kb.add("c-r")
     def redo(event):
-        rev_info = undo_redo_stack.redo()
-        if rev_info is None:
-            return
-
-        rev, file_path, lineno = rev_info
-        browser.browse_blame(rev, file_path, lineno)
+        browser.redo()
 
     @kb.add("S")
     def use_git_show(event):

@@ -19,7 +19,7 @@ from prompt_toolkit.layout import (
 )
 
 from .git_plumbing import STAGING_SHA, Git
-
+from .undo_redo import RevStack, RevBrowseInfo
 
 from typing import TYPE_CHECKING, List, Optional
 
@@ -56,6 +56,7 @@ class Statusbar(Window):
 class Browser(HSplit):
     def __init__(self, git: Git):
         self._git = git
+        self._undo_redo_stack = RevStack()
         self._content = ""
         self._current_sha: Optional[str] = None
         self._blame_lines: List[BlameLine] = []
@@ -160,6 +161,9 @@ class Browser(HSplit):
         # position, otherwise the row might be too high for
         # self.current_blame_line, which will lead to an IndexError.
         self._update_statusbar()
+
+        rev_info = RevBrowseInfo(rev, path, line_no)
+        self._undo_redo_stack.do(rev_info)
 
     # FIXME: this also needs to run on mouse presses
     def _update_statusbar(self):
@@ -269,6 +273,22 @@ class Browser(HSplit):
         self.current_line = (
             len(self._shas) - self._shas[::-1].index(self.cursor_sha) - 1
         )
+
+    def undo(self) -> None:
+        rev_info = self._undo_redo_stack.undo()
+        if rev_info is None:
+            return
+
+        rev, file_path, lineno = rev_info
+        self.browse_blame(rev, file_path, lineno)
+
+    def redo(self) -> None:
+        rev_info = self._undo_redo_stack.redo()
+        if rev_info is None:
+            return
+
+        rev, file_path, lineno = rev_info
+        self.browse_blame(rev, file_path, lineno)
 
 
 class CursorMargin(Margin):
