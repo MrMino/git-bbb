@@ -7,6 +7,8 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
+## [0.0.7]
+
 ### Added
 
 * Search! <kbd>/</kbd> and <kbd>?</kbd> will now trigger a vi-style searchbar
@@ -111,6 +113,7 @@ This is the first version of `git-bbb`, with the most basic functionality
 covered. The project has been in the works for a month now, many things are
 still to be added.
 
+[0.0.7]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.7
 [0.0.6]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.6
 [0.0.5]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.5
 [0.0.4]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.4
