@@ -14,9 +14,7 @@ from .browser import browse_blame_briskly
 from .undo_redo import RevBrowseInfo
 
 
-def generate_bindings(
-    browser, undo_redo_stack, ignore_revs_file
-) -> KeyBindings:
+def generate_bindings(browser, undo_redo_stack, git) -> KeyBindings:
     kb = KeyBindings()
 
     # TODO: reset
@@ -34,9 +32,7 @@ def generate_bindings(
         new_lineno = blame.original_line_number
         rev_info = RevBrowseInfo(new_rev, new_file_path, new_lineno)
         undo_redo_stack.do(rev_info)
-        browse_blame_briskly(
-            browser, ignore_revs_file, new_rev, new_file_path, new_lineno
-        )
+        browse_blame_briskly(browser, git, new_rev, new_file_path, new_lineno)
 
     @kb.add("q", eager=True)
     def exit(event):
@@ -84,7 +80,7 @@ def generate_bindings(
             return
 
         rev, file_path, lineno = rev_info
-        browse_blame_briskly(browser, ignore_revs_file, rev, file_path, lineno)
+        browse_blame_briskly(browser, git, rev, file_path, lineno)
 
     @kb.add("c-r")
     def redo(event):
@@ -93,7 +89,7 @@ def generate_bindings(
             return
 
         rev, file_path, lineno = rev_info
-        browse_blame_briskly(browser, ignore_revs_file, rev, file_path, lineno)
+        browse_blame_briskly(browser, git, rev, file_path, lineno)
 
     @kb.add("S")
     def use_git_show(event):

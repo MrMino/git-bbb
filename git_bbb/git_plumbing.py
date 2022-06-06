@@ -13,7 +13,33 @@ from pathlib import Path
 import git
 
 
+DEFAULT_IGNORE_REVS_PATH = Path(".git-ignore-revs")
 STAGING_SHA = "0" * 40
+BLAME_HEADER_REGEX = re.compile(
+    r"(?P<sha>[a-z0-9]{40})"
+    r" "
+    r"(?P<original_line_number>[0-9]+)"
+    r" "
+    r"(?P<final_line_number>[0-9]+)"
+    r"( (?P<repeats>[0-9]+)\n|\n)"
+    r"author (?P<author_name>.*)\n"
+    r"author-mail (?P<author_mail>.*)\n"
+    r"author-time (?P<author_time>\d+)\n"
+    r"author-tz (?P<author_tz>[+-]\d{4})\n"
+    r"committer (?P<committer_name>.*)\n"
+    r"committer-mail (?P<committer_mail>.*)\n"
+    r"committer-time (?P<committer_time>\d+)\n"
+    r"committer-tz (?P<committer_tz>[+-]\d{4})\n"
+    r"summary (?P<summary>.*)\n"
+    r"(?P<is_boundary>boundary\n)?"
+    r"(previous "
+    r"(?P<previous_sha>[a-z0-9]+)"
+    r" "
+    r"(?P<previous_filename>.*)"
+    r"\n)?"
+    r"filename (?P<original_filename>.*)\n"
+    r"\t(?P<content>.*\n)"
+)
 
 
 @dataclass
@@ -66,111 +92,100 @@ class BlameLine:
         return BlameLine(**fields)
 
 
-def git_show(rev: Optional[str]):
-    cmd = ["git", "show"]
-    env = os.environ.copy()
-    # FIXME: Delta will set Less with --quit-on-eof by default
-    #
-    # This behavior would have to be sidestepped by implementing .gitconfig
-    # settings for git-bbb, so that one can specify a pager for git-bbb
-    # separately to git-show:
-    #
-    #     [pager]
-    #         show = delta
-    #         bbb = delta --paging=always
-    #
-    # This could also be achieved if Delta took options by an environment
-    # variable. It is preferrable, but (? most likely ?) so not implemented in
-    # Delta yet.
-    env["DELTA_PAGER"] = "less -+F"
-    if rev:
-        cmd += [rev]
-    subprocess.run(cmd, env=env)
+class Git:
+    def __init__(self, ignore_revs_file: Optional[str] = None):
+        if ignore_revs_file is None:
+            self.ignore_revs_file = self.default_ignore_revs()
+        else:
+            self.ignore_revs_file = ignore_revs_file
 
+        self.repo_path = self.show_toplevel()
 
-def git_blame(
-    path: Path, rev: Optional[str], ignore_revs_file: Optional[str]
-) -> str:
-    cmd = ["git", "blame", "--line-porcelain"]
-    if ignore_revs_file is not None:
-        cmd += ["--ignore-revs-file", ignore_revs_file]
-    if rev is not None:
-        cmd += [rev, "--"]
-    cmd += [str(path)]
-    # TODO: show proper error messages when this fails
-    return subprocess.check_output(cmd).decode("utf-8")
+    def default_ignore_revs(self) -> Optional[str]:
+        """Return the path to default ignore-revs file, if available."""
+        # TODO: either use git_show_toplevel here and remove dependency on
+        # gitpython, or reuse repo.working_tree_dir where git_show_toplevel is
+        # used.
+        repo = git.Repo(search_parent_directories=True)
+        worktree_path = repo.working_tree_dir
 
+        if worktree_path is None:
+            # We are in a bare repository
+            return None
 
-def parse_git_blame_output(blame_output: str) -> List[BlameLine]:
-    BLAME_HEADER_REGEX = re.compile(
-        r"(?P<sha>[a-z0-9]{40})"
-        r" "
-        r"(?P<original_line_number>[0-9]+)"
-        r" "
-        r"(?P<final_line_number>[0-9]+)"
-        r"( (?P<repeats>[0-9]+)\n|\n)"
-        r"author (?P<author_name>.*)\n"
-        r"author-mail (?P<author_mail>.*)\n"
-        r"author-time (?P<author_time>\d+)\n"
-        r"author-tz (?P<author_tz>[+-]\d{4})\n"
-        r"committer (?P<committer_name>.*)\n"
-        r"committer-mail (?P<committer_mail>.*)\n"
-        r"committer-time (?P<committer_time>\d+)\n"
-        r"committer-tz (?P<committer_tz>[+-]\d{4})\n"
-        r"summary (?P<summary>.*)\n"
-        r"(?P<is_boundary>boundary\n)?"
-        r"(previous "
-        r"(?P<previous_sha>[a-z0-9]+)"
-        r" "
-        r"(?P<previous_filename>.*)"
-        r"\n)?"
-        r"filename (?P<original_filename>.*)\n"
-        r"\t(?P<content>.*\n)"
-    )
+        default_file_path = worktree_path / DEFAULT_IGNORE_REVS_PATH
 
-    blames = [
-        BlameLine.from_groupdict(**m.groupdict())
-        for m in BLAME_HEADER_REGEX.finditer(blame_output)
-    ]
+        if not default_file_path.exists():
+            return None
+        if not default_file_path.is_file():
+            return None
 
-    return blames
+        return str(default_file_path)
 
+    def show(self, rev: Optional[str]):
+        cmd = ["git", "show"]
+        env = os.environ.copy()
+        # FIXME: Delta will set Less with --quit-on-eof by default
+        #
+        # This behavior would have to be sidestepped by implementing .gitconfig
+        # settings for git-bbb, so that one can specify a pager for git-bbb
+        # separately to git-show:
+        #
+        #     [pager]
+        #         show = delta
+        #         bbb = delta --paging=always
+        #
+        # This could also be achieved if Delta took options by an environment
+        # variable. It is preferrable, but (? most likely ?) so not implemented
+        # in Delta yet.
+        env["DELTA_PAGER"] = "less -+F"
+        if rev:
+            cmd += [rev]
+        subprocess.run(cmd, env=env)
 
-def git_show_toplevel():
-    """Get absolute path to the repository we're in currently."""
-    cmd = ["git", "rev-parse", "--show-toplevel"]
-    return Path(subprocess.check_output(cmd).decode("utf-8").strip())
+    def blame(self, path: Path, rev: Optional[str]) -> List[BlameLine]:
+        """Run git blame.
 
+        Runs git blame on a given path, in a given revision. If revision is not
+        given, shows blame that includes currently staged changes (same as "git
+        blame path/to/file" would).
 
-def git_rev_parse_head() -> str:
-    """Get current commit SHA.
+        If revision is equal to STAGING_SHA, i.e. is a string of zeroes,
+        currently staged changes are removed by setting rev to the one that the
+        current HEAD points to.
+        """
+        if not path.is_absolute():
+            path = (self.repo_path / path).resolve()
 
-    Can be used to get rid of unstaged changes.
-    """
-    cmd = ["git", "rev-parse", "HEAD"]
-    return subprocess.check_output(cmd).decode("utf-8").strip()
+        if rev == STAGING_SHA:
+            # Get rid of unstaged changes.
+            rev = self.rev_parse_head()
 
+        cmd = ["git", "blame", "--line-porcelain"]
+        if self.ignore_revs_file is not None:
+            cmd += ["--ignore-revs-file", self.ignore_revs_file]
+        if rev is not None:
+            cmd += [rev, "--"]
+        cmd += [str(path)]
 
-DEFAULT_IGNORE_REVS_PATH = Path(".git-ignore-revs")
+        # TODO: show proper error messages when this fails
+        blame_output = subprocess.check_output(cmd).decode("utf-8")
+        blames = [
+            BlameLine.from_groupdict(**m.groupdict())
+            for m in BLAME_HEADER_REGEX.finditer(blame_output)
+        ]
 
+        return blames
 
-def default_ignore_revs() -> Optional[str]:
-    """Check if default ignore-revs file is available, return its path if so."""
-    # TODO: either use git_show_toplevel here and remove dependency on
-    # gitpython, or reuse repo.working_tree_dir where git_show_toplevel is
-    # used.
-    repo = git.Repo(search_parent_directories=True)
-    worktree_path = repo.working_tree_dir
+    def show_toplevel(self):
+        """Get absolute path to the repository we're in currently."""
+        cmd = ["git", "rev-parse", "--show-toplevel"]
+        return Path(subprocess.check_output(cmd).decode("utf-8").strip())
 
-    if worktree_path is None:
-        # We are in a bare repository
-        return None
+    def rev_parse_head(self) -> str:
+        """Get current commit SHA.
 
-    default_file_path = worktree_path / DEFAULT_IGNORE_REVS_PATH
-
-    if not default_file_path.exists():
-        return None
-    if not default_file_path.is_file():
-        return None
-
-    return str(default_file_path)
+        Can be used to get rid of unstaged changes.
+        """
+        cmd = ["git", "rev-parse", "HEAD"]
+        return subprocess.check_output(cmd).decode("utf-8").strip()

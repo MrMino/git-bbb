@@ -18,14 +18,7 @@ from prompt_toolkit.layout import (
     ConditionalContainer,
 )
 
-from .git_plumbing import (
-    git_show,
-    git_blame,
-    git_show_toplevel,
-    git_rev_parse_head,
-    parse_git_blame_output,
-    STAGING_SHA,
-)
+from .git_plumbing import STAGING_SHA, Git
 
 
 from typing import TYPE_CHECKING, List, Optional
@@ -224,7 +217,7 @@ class Browser(HSplit):
         # FIXME: this makes the screen filcker temporarily with the contents of
         # the terminal as seen before running the app. It's distracting and
         # ugly.
-        run_in_terminal(lambda: git_show(self.current_blame_line.sha))
+        run_in_terminal(lambda: Git().show(self.current_blame_line.sha))
 
     def go_to_next_line_of_current_sha(self, wrap=True):
         try:
@@ -418,16 +411,7 @@ class PaddingMargin(Margin):
         return self.width
 
 
-repo_path = git_show_toplevel()
-
-
-def browse_blame_briskly(browser, ignore_revs_file, rev, path, current_line=1):
-    if rev == STAGING_SHA:
-        # Get rid of unstaged changes.
-        rev = git_rev_parse_head()
-    if not path.is_absolute():
-        path = (repo_path / path).resolve()
-    blame_output = git_blame(path, rev, ignore_revs_file)
-    blames = parse_git_blame_output(blame_output)
+def browse_blame_briskly(browser, git, rev, path, current_line=1):
+    blames = git.blame(path, rev)
     pygments_lexer = PygmentsLexer.from_filename(path)
     browser.browse_blame(rev, blames, pygments_lexer, current_line)
