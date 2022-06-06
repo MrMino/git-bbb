@@ -58,7 +58,7 @@ git bbb file/in/the/repo
   half a page up and down, respectively
 - <kbd>Page Up</kbd> & <kbd>Page Down</kbd> do what they are supposed to do
 - <kbd>/</kbd> & <kbd>?</kbd> to search through file contents. This works
-  mostly in the same way as the Vi(m) one. Use <kbd>n</kbd> and <kbd>N</kbd> to
+  mostly in the same way as in Vi(m). Use <kbd>n</kbd> and <kbd>N</kbd> to
   cycle through results.
 - <kbd>q</kbd> to quit
 - ...many more to come
