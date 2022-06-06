@@ -8,7 +8,7 @@ from prompt_toolkit.styles.pygments import style_from_pygments_cls
 from pygments.styles import get_style_by_name
 
 from .git_plumbing import Git
-from .browser import Browser, browse_blame_briskly
+from .browser import Browser
 from .key_bindings import generate_bindings
 from .undo_redo import RevStack, RevBrowseInfo
 
@@ -22,11 +22,11 @@ def run(path, rev, ignore_revs_file):
     rev_info = RevBrowseInfo(rev, path, 1)
     undo_redo_stack = RevStack(rev_info)
 
-    browser = Browser()
-    browse_blame_briskly(browser, git, rev, path)
+    browser = Browser(git)
+    browser.browse_blame(rev, path, line_no=1)
 
     layout = Layout(browser)
-    key_bindings = generate_bindings(browser, undo_redo_stack, git)
+    key_bindings = generate_bindings(browser, undo_redo_stack)
 
     # TODO: make this configurable
     pygments_style = "monokai"

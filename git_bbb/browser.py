@@ -24,6 +24,7 @@ from .git_plumbing import STAGING_SHA, Git
 from typing import TYPE_CHECKING, List, Optional
 
 if TYPE_CHECKING:
+    from pathlib import Path
     from prompt_toolkit.layout import WindowRenderInfo
     from prompt_toolkit.formatted_text import StyleAndTextTuples
     from .git_plumbing import BlameLine
@@ -53,11 +54,12 @@ class Statusbar(Window):
 
 
 class Browser(HSplit):
-    def __init__(self):
-        self._content = None
-        self._current_sha: str = None
-        self._blame_lines = []
-        self._shas = []
+    def __init__(self, git: Git):
+        self._git = git
+        self._content = ""
+        self._current_sha: Optional[str] = None
+        self._blame_lines: List[BlameLine] = []
+        self._shas: List[str] = []
         self._source_buffer = Buffer(
             name="source",
             read_only=True,
@@ -126,12 +128,12 @@ class Browser(HSplit):
 
     def browse_blame(
         self,
-        current_sha: str,
-        blame_lines: List[BlameLine],
-        lexer: PygmentsLexer,
-        current_line_index: int,
+        rev: str,
+        path: Path,
+        line_no: int,
     ):
-        self._current_sha = current_sha
+        blame_lines = self._git.blame(path, rev)
+        self._current_sha = rev
         self._blame_lines = blame_lines
         self._shas = [b.sha for b in self._blame_lines]
 
@@ -139,6 +141,7 @@ class Browser(HSplit):
         output = output.rstrip("\n")  # Do not render empty line at the end
         self._content = output
 
+        lexer = PygmentsLexer.from_filename(str(path))
         self._source_buffer_control.lexer = lexer
 
         self._sha_list_margin.shas = self._shas
@@ -151,7 +154,7 @@ class Browser(HSplit):
         self._source_buffer.set_document(source_document, bypass_readonly=True)
 
         # Line indexes are counted from 0, line numbers - from 1.
-        self.current_line = current_line_index - 1
+        self.current_line = line_no - 1
 
         # XXX: statusbar has to be updated _after_ updating the cursor
         # position, otherwise the row might be too high for
@@ -217,7 +220,7 @@ class Browser(HSplit):
         # FIXME: this makes the screen filcker temporarily with the contents of
         # the terminal as seen before running the app. It's distracting and
         # ugly.
-        run_in_terminal(lambda: Git().show(self.current_blame_line.sha))
+        run_in_terminal(lambda: self._git.show(self.current_blame_line.sha))
 
     def go_to_next_line_of_current_sha(self, wrap=True):
         try:
@@ -409,9 +412,3 @@ class PaddingMargin(Margin):
 
     def get_width(self, _) -> int:
         return self.width
-
-
-def browse_blame_briskly(browser, git, rev, path, current_line=1):
-    blames = git.blame(path, rev)
-    pygments_lexer = PygmentsLexer.from_filename(path)
-    browser.browse_blame(rev, blames, pygments_lexer, current_line)

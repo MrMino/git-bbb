@@ -10,11 +10,10 @@ from prompt_toolkit.key_binding.bindings.scroll import (
 from prompt_toolkit.filters import Condition
 from prompt_toolkit.utils import suspend_to_background_supported
 
-from .browser import browse_blame_briskly
 from .undo_redo import RevBrowseInfo
 
 
-def generate_bindings(browser, undo_redo_stack, git) -> KeyBindings:
+def generate_bindings(browser, undo_redo_stack) -> KeyBindings:
     kb = KeyBindings()
 
     # TODO: reset
@@ -32,7 +31,7 @@ def generate_bindings(browser, undo_redo_stack, git) -> KeyBindings:
         new_lineno = blame.original_line_number
         rev_info = RevBrowseInfo(new_rev, new_file_path, new_lineno)
         undo_redo_stack.do(rev_info)
-        browse_blame_briskly(browser, git, new_rev, new_file_path, new_lineno)
+        browser.browse_blame(new_rev, new_file_path, new_lineno)
 
     @kb.add("q", eager=True)
     def exit(event):
@@ -80,7 +79,7 @@ def generate_bindings(browser, undo_redo_stack, git) -> KeyBindings:
             return
 
         rev, file_path, lineno = rev_info
-        browse_blame_briskly(browser, git, rev, file_path, lineno)
+        browser.browse_blame(rev, file_path, lineno)
 
     @kb.add("c-r")
     def redo(event):
@@ -89,7 +88,7 @@ def generate_bindings(browser, undo_redo_stack, git) -> KeyBindings:
             return
 
         rev, file_path, lineno = rev_info
-        browse_blame_briskly(browser, git, rev, file_path, lineno)
+        browser.browse_blame(rev, file_path, lineno)
 
     @kb.add("S")
     def use_git_show(event):
