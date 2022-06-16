@@ -27,7 +27,7 @@ def generate_bindings(browser) -> KeyBindings:
         new_file_path = blame.original_filename
         new_rev = blame.sha
         new_lineno = blame.original_line_number
-        browser.browse_blame(new_rev, new_file_path, new_lineno)
+        browser.warp(new_rev, new_file_path, new_lineno)
 
     @kb.add("q", eager=True)
     def exit(event):

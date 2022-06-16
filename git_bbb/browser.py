@@ -61,6 +61,7 @@ class Browser(HSplit):
         self._undo_redo_stack = RevStack()
         self._content = ""
         self._current_sha: Optional[str] = None
+        self._current_path: Optional[Path] = None
         self._blame_lines: List[BlameLine] = []
         self._shas: List[str] = []
 
@@ -138,13 +139,14 @@ class Browser(HSplit):
         """True if the file we are browsing is empty in current revision."""
         return not bool(self._blame_lines)
 
-    def browse_blame(
+    def _browse_blame(
         self,
         rev: str,
         path: Path,
         line_no: int,
     ):
         blame_lines = self._git.blame(path, rev)
+        self._current_path = path
         self._current_sha = rev
         self._blame_lines = blame_lines
         self._shas = [b.sha for b in self._blame_lines]
@@ -172,9 +174,6 @@ class Browser(HSplit):
         # position, otherwise the row might be too high for
         # self.current_blame_line, which will lead to an IndexError.
         self._update_statusbar()
-
-        rev_info = RevBrowseInfo(rev, path, line_no)
-        self._undo_redo_stack.do(rev_info)
 
     # FIXME: this also needs to run on mouse presses
     def _update_statusbar(self):
@@ -216,6 +215,17 @@ class Browser(HSplit):
             )
         )
         self._source_buffer.cursor_position = new_cursor_position
+
+    def warp(self, new_file_path: Path, new_rev: str, new_lineno: int) -> None:
+        self._browse_blame(new_rev, new_file_path, new_lineno)
+        self._add_undo_point()
+
+    def _add_undo_point(self):
+        path = self._current_path
+        rev = self._current_sha
+        line_no = self.current_line + 1
+        rev_info = RevBrowseInfo(rev, path, line_no)
+        self._undo_redo_stack.do(rev_info)
 
     def cursor_down(self, count=1):
         for _ in range(count):
@@ -291,7 +301,7 @@ class Browser(HSplit):
             return
 
         rev, file_path, lineno = rev_info
-        self.browse_blame(rev, file_path, lineno)
+        self._browse_blame(rev, file_path, lineno)
 
     def redo(self) -> None:
         rev_info = self._undo_redo_stack.redo()
@@ -299,7 +309,7 @@ class Browser(HSplit):
             return
 
         rev, file_path, lineno = rev_info
-        self.browse_blame(rev, file_path, lineno)
+        self._browse_blame(rev, file_path, lineno)
 
 
 class CursorMargin(Margin):
