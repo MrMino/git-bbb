@@ -18,9 +18,7 @@ logger = logging.getLogger(__name__)
 def run(path, rev, ignore_revs_file):
     git = Git(ignore_revs_file)
 
-    browser = Browser(git)
-    browser.browse_blame(rev, path, line_no=1)
-
+    browser = Browser(git, rev, path, initial_lineno=1)
     layout = Layout(browser)
 
     # TODO: make this configurable

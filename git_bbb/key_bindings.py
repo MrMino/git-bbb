@@ -22,12 +22,7 @@ def generate_bindings(browser) -> KeyBindings:
 
     @kb.add("enter")
     def warp(event):
-        # TODO: this code shouldn't be in keybinding function
-        blame = browser.current_blame_line
-        new_file_path = blame.original_filename
-        new_rev = blame.sha
-        new_lineno = blame.original_line_number
-        browser.warp(new_rev, new_file_path, new_lineno)
+        browser.warp()
 
     @kb.add("q", eager=True)
     def exit(event):

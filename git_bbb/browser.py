@@ -56,7 +56,7 @@ class Statusbar(Window):
 
 
 class Browser(HSplit):
-    def __init__(self, git: Git):
+    def __init__(self, git: Git, rev: str, path: Path, initial_lineno: int):
         self._git = git
         self._undo_redo_stack = RevStack()
         self._content = ""
@@ -127,6 +127,8 @@ class Browser(HSplit):
                 self._search_toolbar,
             ]
         )
+
+        self._browse_blame(rev, path, initial_lineno)
 
     def _empty_file_text(self):
         revision = (
@@ -216,7 +218,11 @@ class Browser(HSplit):
         )
         self._source_buffer.cursor_position = new_cursor_position
 
-    def warp(self, new_file_path: Path, new_rev: str, new_lineno: int) -> None:
+    def warp(self):
+        blame = self.current_blame_line
+        new_file_path = blame.original_filename
+        new_rev = blame.sha
+        new_lineno = blame.original_line_number
         self._browse_blame(new_rev, new_file_path, new_lineno)
         self._add_undo_point()
 
