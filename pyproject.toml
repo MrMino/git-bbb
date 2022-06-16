@@ -34,3 +34,6 @@ git-bbb = "git_bbb.cli:git_bbb"
 
 [options.extras_require]
 test = ["pytest"]
+
+[tool.black]
+line-length = 80
