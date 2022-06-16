@@ -80,21 +80,21 @@ def generate_bindings(browser) -> KeyBindings:
     def use_git_show(event):
         browser.run_git_show_for_line()
 
-    @kb.add("]")
+    @kb.add("J")
     def next_line_of_this_sha(event):
         # TODO: Vi-style n-times moving
         browser.go_to_next_line_of_current_sha()
 
-    @kb.add("[")
+    @kb.add("K")
     def previous_line_of_this_sha(event):
         # TODO: Vi-style n-times moving
         browser.go_to_previous_line_of_current_sha()
 
-    @kb.add("}")
+    @kb.add("L")
     def first_line_of_this_sha(event):
         browser.go_to_last_line_of_current_sha()
 
-    @kb.add("{")
+    @kb.add("H")
     def last_line_of_this_sha(event):
         browser.go_to_first_line_of_current_sha()
 

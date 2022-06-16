@@ -7,6 +7,11 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
+### Changed
+
+* Keybindings for traveling between lines of the SHA under cursor are now
+  <kbd>H</kbd>, <kbd>L</kbd>, <kbd>K</kbd>, and <kbd>J</kbd>
+
 ## [0.0.7]
 
 ### Added

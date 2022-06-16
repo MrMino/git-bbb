@@ -50,8 +50,8 @@ git bbb file/in/the/repo
 - <kbd>ctrl</kbd>+<kbd>r</kbd> to _redo_ previous warp.
 - <kbd>H</kbd> & <kbd>J</kbd> move the whole document view up and down
 - Stepping between the lines of the currently highlighted revision:
-  <kbd>{</kbd> - first, <kbd>}</kbd> - last, <kbd>]</kbd> - next,
-  <kbd>[</kbd> - previous.
+  <kbd>H</kbd> - first, <kbd>L</kbd> - last, <kbd>J</kbd> - next,
+  <kbd>K</kbd> - previous.
 - <kbd>gg</kbd> and <kbd>G</kbd> will make git bbb go to the first and last
   line, respectively
 - <kbd>Ctrl</kbd>+<kbd>d</kbd> and <kbd>Ctrl</kbd>+<kbd>u</kbd> will scroll
