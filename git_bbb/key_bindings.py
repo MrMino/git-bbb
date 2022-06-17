@@ -24,6 +24,10 @@ def generate_bindings(browser) -> KeyBindings:
     def warp(event):
         browser.warp()
 
+    @kb.add("P")
+    def warp_previous(event):
+        browser.warp_previous()
+
     @kb.add("q", eager=True)
     def exit(event):
         event.app.exit()

@@ -44,7 +44,8 @@ git bbb file/in/the/repo
 
 - Use <kbd>h</kbd> & <kbd>j</kbd> or <kbd>↓</kbd> & <kbd>↑</kbd> to move to the
   next/previous blame line
-- <kbd>Enter</kbd> to switch (_warp_) to the highlighted revision.
+- <kbd>Enter</kbd> to switch (_warp_) to the highlighted revision, or
+  <kbd>P</kbd> to go to its ancestor.
 - <kbd>S</kbd> runs `git show` for the commit indicated by the cursor.
 - <kbd>u</kbd> to go back to the previously viewed revision - a.k.a. _undo_.
 - <kbd>ctrl</kbd>+<kbd>r</kbd> to _redo_ previous warp.

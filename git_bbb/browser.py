@@ -230,6 +230,15 @@ class Browser(HSplit):
         self._browse_blame(new_rev, new_file_path, new_lineno)
         self._add_undo_point()
 
+    def warp_previous(self):
+        self._save_lineno_checkpoint()
+        blame = self.current_blame_line
+        new_file_path = blame.previous_filename
+        new_rev = blame.previous_sha
+        new_lineno = blame.original_line_number
+        self._browse_blame(new_rev, new_file_path, new_lineno)
+        self._add_undo_point()
+
     def _add_undo_point(self):
         path = self._current_path
         rev = self._current_sha

@@ -7,6 +7,10 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
+### Added
+
+* Pressing <kbd>P</kbd> will now warp to the ancestor of the indicated commit.
+
 ### Changed
 
 * Keybindings for traveling between lines of the SHA under cursor are now
