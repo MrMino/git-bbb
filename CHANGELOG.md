@@ -129,7 +129,7 @@ This is the first version of `git-bbb`, with the most basic functionality
 covered. The project has been in the works for a month now, many things are
 still to be added.
 
-[0.0.7]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.8
+[0.0.8]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.8
 [0.0.7]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.7
 [0.0.6]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.6
 [0.0.5]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.5
