@@ -5,7 +5,7 @@ from collections import namedtuple
 from typing import Optional
 
 
-RevBrowseInfo = namedtuple("RevBrowseInfo", ["rev", "file_path", "lineno"])
+RevBrowseInfo = namedtuple("RevBrowseInfo", ["rev", "file_path"])
 
 
 # todo: unittest

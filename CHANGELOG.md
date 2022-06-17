@@ -11,6 +11,9 @@ on the willingness of the author to come up with any and stick to it.
 
 * Keybindings for traveling between lines of the SHA under cursor are now
   <kbd>H</kbd>, <kbd>L</kbd>, <kbd>K</kbd>, and <kbd>J</kbd>
+* Undo & redo functionality now behaves more in line with what the user would
+  expect: cursor position is saved per browsed rev and restored going back or
+  forth in browsing history.
 
 ## [0.0.7]
 

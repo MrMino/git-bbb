@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections import defaultdict
+
 from prompt_toolkit.application import run_in_terminal
 from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.buffer import Buffer, Document
@@ -23,7 +25,7 @@ from .git_plumbing import STAGING_SHA, Git
 from .undo_redo import RevStack, RevBrowseInfo
 from .key_bindings import generate_bindings
 
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, List, Optional, Dict
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -59,6 +61,7 @@ class Browser(HSplit):
     def __init__(self, git: Git, rev: str, path: Path, initial_lineno: int):
         self._git = git
         self._undo_redo_stack = RevStack()
+        self._lineno_cache: Dict[str, int] = defaultdict(lambda: 1)
         self._content = ""
         self._current_sha: Optional[str] = None
         self._current_path: Optional[Path] = None
@@ -219,19 +222,23 @@ class Browser(HSplit):
         self._source_buffer.cursor_position = new_cursor_position
 
     def warp(self):
+        self._add_undo_point()
         blame = self.current_blame_line
         new_file_path = blame.original_filename
         new_rev = blame.sha
         new_lineno = blame.original_line_number
         self._browse_blame(new_rev, new_file_path, new_lineno)
-        self._add_undo_point()
 
     def _add_undo_point(self):
+        self._save_lineno_checkpoint()
         path = self._current_path
         rev = self._current_sha
-        line_no = self.current_line + 1
-        rev_info = RevBrowseInfo(rev, path, line_no)
+        rev_info = RevBrowseInfo(rev, path)
         self._undo_redo_stack.do(rev_info)
+
+    def _save_lineno_checkpoint(self):
+        lineno = self.current_line + 1
+        self._lineno_cache[self._current_sha] = lineno
 
     def cursor_down(self, count=1):
         for _ in range(count):
@@ -302,19 +309,23 @@ class Browser(HSplit):
         )
 
     def undo(self) -> None:
+        self._save_lineno_checkpoint()
         rev_info = self._undo_redo_stack.undo()
         if rev_info is None:
             return
 
-        rev, file_path, lineno = rev_info
+        rev, file_path = rev_info
+        lineno = self._lineno_cache[rev]
         self._browse_blame(rev, file_path, lineno)
 
     def redo(self) -> None:
+        self._save_lineno_checkpoint()
         rev_info = self._undo_redo_stack.redo()
         if rev_info is None:
             return
 
-        rev, file_path, lineno = rev_info
+        rev, file_path = rev_info
+        lineno = self._lineno_cache[rev]
         self._browse_blame(rev, file_path, lineno)
 
 
