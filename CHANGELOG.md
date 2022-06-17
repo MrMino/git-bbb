@@ -7,6 +7,10 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
+Nothing yet
+
+## [v0.0.9]
+
 ### Fixed
 
 * Fixed keybinding collision introduced in [v0.0.8]: scrolling document view is
@@ -133,6 +137,7 @@ This is the first version of `git-bbb`, with the most basic functionality
 covered. The project has been in the works for a month now, many things are
 still to be added.
 
+[0.0.9]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.9
 [0.0.8]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.8
 [0.0.7]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.7
 [0.0.6]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.6
