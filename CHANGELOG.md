@@ -7,7 +7,11 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
-Nothing yet.
+### Fixed
+
+* Fixed keybinding collision introduced in [v0.0.8]: scrolling document view is
+  now done via <kbd>ctrl</kbd>+<kbd>j</kbd> & <kbd>ctrl</kbd>+<kbd>k</kbd>
+  instead of <kbd>J</kbd> & <kbd>K</kbd> .
 
 ## [v0.0.8]
 

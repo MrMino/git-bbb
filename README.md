@@ -54,7 +54,8 @@ git bbb file/in/the/repo
 - <kbd>S</kbd> runs `git show` for the commit indicated by the cursor.
 - <kbd>u</kbd> to go back to the previously viewed revision - a.k.a. _undo_.
 - <kbd>ctrl</kbd>+<kbd>r</kbd> to _redo_ previous warp.
-- <kbd>H</kbd> & <kbd>J</kbd> move the whole document view up and down
+- <kbd>ctrl</kbd>+<kbd>J</kbd> & <kbd>ctrl</kbd>+<kbd>K</kbd> move the whole
+  document view up and down
 - Stepping between the lines of the currently highlighted revision:
   <kbd>H</kbd> - first, <kbd>L</kbd> - last, <kbd>J</kbd> - next,
   <kbd>K</kbd> - previous.

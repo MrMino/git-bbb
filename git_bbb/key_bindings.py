@@ -60,9 +60,9 @@ def generate_bindings(browser) -> KeyBindings:
         browser  # Needs to be here so that we can access it in the debugger
 
     # TODO: Vi-style n-times moving
-    kb.add("J")(scroll_one_line_down)
+    kb.add("c-j")(scroll_one_line_down)
     kb.add("s-down")(scroll_one_line_down)
-    kb.add("K")(scroll_one_line_up)
+    kb.add("c-k")(scroll_one_line_up)
     kb.add("s-up")(scroll_one_line_up)
     kb.add("c-d")(scroll_half_page_down)
     kb.add("c-u")(scroll_half_page_up)
