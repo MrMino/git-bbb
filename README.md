@@ -18,13 +18,17 @@ between different revisions.
 
 ### Features ✨
 
-The project is in its early stages of development, many features are still to
-be worked out. For now, the most notable features are:
-
- - Colorized syntax (thanks, [Pygments](https://pygments.org/)!)
- - Seamlessly go to the revision from a blame line in just one keypress
+ - Sensible TUI made with [Prompt
+   Toolkit](https://github.com/prompt-toolkit/python-prompt-toolkit)
+ - Syntax highlighting thanks to [Pygments](https://pygments.org/)!)
+ - Seamlessly switches between revisions in just one keypress
+ - Shows you where the lines of a commit are in the file
  - Uses `.git-ignore-revs` file as an input to `--ignore-revs-file` by default
- - Vi style bindings
+ - Vi style key bindings
+ - Search functionality
+ - _Coming soon: customizability via `git config`_
+ - _Coming soon: seamlessly browse through file history, even if it was being
+   moved multiple times_
 
 ### Installation
 
