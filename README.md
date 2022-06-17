@@ -27,8 +27,9 @@ between different revisions.
  - Vi style key bindings
  - Search functionality
  - _Coming soon: customizability via `git config`_
- - _Coming soon: seamlessly browse through file history, even if it was being
-   moved multiple times_
+ - _Coming soon: seamlessly browse through file history, even if it was moved
+   multiple times_
+ - _Coming soon: highlight contributions made by a given author_
 
 ### Installation
 
