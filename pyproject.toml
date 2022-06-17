@@ -1,5 +1,6 @@
 [project]
 name = "git-bbb"
+description = "⚡ Brisk Blame Browser for Git"
 version = "0.0.8"
 dependencies = [
 	"gitpython",
