@@ -7,7 +7,23 @@ on the willingness of the author to come up with any and stick to it.
 
 ## [Unreleased]
 
-Nothing yet
+## [v0.0.10]
+
+### Changed
+
+* When running `git-bbb` with `blame.ignoreRevsFile` Git option configured,
+  the value of this option will be used as the default ignore revs path instead
+  of the `.git-blame-ignore-revs` default.
+* `git-bbb` will now disable the global Git configuration when running `git
+  blame`, to ensure that `blame.ignoreRevsFile` is fully controllable via
+  mechanics outlined below.
+
+### Fixed
+
+* If the path configured via `blame.ignoreRevsFile` is not found, `git-bbb`
+  will prevent `git blame` from using it, preventing the previously seen nasty
+  traceback from happening. I.e. `git-bbb` will happily accept this state of
+  things, despite `git-blame` being normally unusable at this point.
 
 ## [v0.0.9]
 
@@ -137,6 +153,7 @@ This is the first version of `git-bbb`, with the most basic functionality
 covered. The project has been in the works for a month now, many things are
 still to be added.
 
+[0.0.10]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.10
 [0.0.9]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.9
 [0.0.8]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.8
 [0.0.7]: https://github.com/mrmino/git-bbb/releases/tag/v0.0.7
