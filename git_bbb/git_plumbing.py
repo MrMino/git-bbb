@@ -3,6 +3,7 @@
 Blame-related functionality is done by us instead of gitpython, becase the
 latter doesn't have all of the necessary functionality.
 """
+
 import os
 import re
 import subprocess

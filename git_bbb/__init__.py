@@ -1,6 +1,7 @@
 """
 Git-bbb: Brisk Blame Browser for Git.
 """
+
 from prompt_toolkit import Application
 from prompt_toolkit.enums import EditingMode
 from prompt_toolkit.layout import Layout
