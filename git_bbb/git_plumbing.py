@@ -169,6 +169,10 @@ class Git:
     def blame(self, path: Path, rev: Optional[str]) -> List[BlameLine]:
         """Run git blame.
 
+        Global configuration will be discarded except for
+        'blame.ignoreRevsFile', which will be used if the specified path
+        exists.
+
         Runs git blame on a given path, in a given revision. If revision is not
         given, shows blame that includes currently staged changes (same as "git
         blame path/to/file" would).
@@ -191,8 +195,11 @@ class Git:
             cmd += [rev, "--"]
         cmd += [str(path)]
 
+        # Prevents Git from reading global config
+        env = {"HOME": ""}
+
         # TODO: show proper error messages when this fails
-        blame_output = subprocess.check_output(cmd).decode("utf-8")
+        blame_output = subprocess.check_output(cmd, env=env).decode("utf-8")
         blames = [
             BlameLine.from_groupdict(**m.groupdict())
             for m in BLAME_HEADER_REGEX.finditer(blame_output)
