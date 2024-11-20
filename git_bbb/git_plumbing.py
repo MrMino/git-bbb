@@ -11,6 +11,7 @@ from typing import Optional, List
 from pathlib import Path
 
 import git
+import git.cmd
 
 
 DEFAULT_IGNORE_REVS_PATH = Path(".git-ignore-revs")
@@ -122,6 +123,23 @@ class Git:
             return None
 
         return str(default_file_path)
+
+    @staticmethod
+    def configured_ignore_revs() -> Optional[str]:
+        """Return the path to the ignore-revs file as configured in Git config.
+
+        Uses 'blame.ignoreRevsFile' option. Returns None if the option is not set.
+        """
+        config = git.cmd.Git().config("--default", "", "--get", "blame.ignoreRevsFile")
+        if not config:
+            return None
+
+        configured_file_path = Path(config)
+        if not configured_file_path.exists():
+            return None
+        if not configured_file_path.is_file():
+            return None
+        return str(configured_file_path)
 
     def show(self, rev: Optional[str]):
         cmd = ["git", "show"]
