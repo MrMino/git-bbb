@@ -96,9 +96,11 @@ class BlameLine:
 class Git:
     def __init__(self, ignore_revs_file: Optional[str] = None):
         if ignore_revs_file is None:
-            self.ignore_revs_file = self.default_ignore_revs()
-        else:
-            self.ignore_revs_file = ignore_revs_file
+            ignore_revs_file = self.configured_ignore_revs()
+        if ignore_revs_file is None:
+            ignore_revs_file = self.default_ignore_revs()
+
+        self.ignore_revs_file = ignore_revs_file
 
         self.repo_path = self.show_toplevel()
 
