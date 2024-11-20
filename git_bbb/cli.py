@@ -12,9 +12,9 @@ from . import run
     default=None,
     metavar="ignore-revs-file",
     help=(
-        "Ignore revisions listed in file. See for git-blame manual for more "
-        "information. By default, .git-ignore-revs is searched in the root of "
-        "the repository and used, if it exists."
+        "Ignore revisions listed in file. See git-blame manual for more "
+        "information. By default, '.git-ignore-revs' from the repository root "
+        "is used, if it exists."
     ),
     type=click.Path(
         exists=True,
