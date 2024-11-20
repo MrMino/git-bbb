@@ -101,7 +101,8 @@ class Git:
 
         self.repo_path = self.show_toplevel()
 
-    def default_ignore_revs(self) -> Optional[str]:
+    @staticmethod
+    def default_ignore_revs() -> Optional[str]:
         """Return the path to default ignore-revs file, if available."""
         # TODO: either use git_show_toplevel here and remove dependency on
         # gitpython, or reuse repo.working_tree_dir where git_show_toplevel is
